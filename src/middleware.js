@@ -37,7 +37,9 @@ const sessionNameValidation = async (req, res, next) => {
       example: 'f8377d8d-a589-4242-9ba6-9486a04ef80c'
     }
   */
-  if ((!/^[\w-]+$/.test(req.params.sessionId))) {
+  // Aceita tanto sessionId quanto channelToken como parâmetro
+  const sessionId = req.params.sessionId || req.params.channelToken;
+  if ((!/^[\w-]+$/.test(sessionId))) {
     /* #swagger.responses[422] = {
         description: "Unprocessable Entity.",
         content: {
@@ -53,7 +55,9 @@ const sessionNameValidation = async (req, res, next) => {
 }
 
 const sessionValidation = async (req, res, next) => {
-  const validation = await validateSession(req.params.sessionId)
+  // Aceita tanto sessionId quanto channelToken como parâmetro
+  const sessionId = req.params.sessionId || req.params.channelToken;
+  const validation = await validateSession(sessionId)
   if (validation.success !== true) {
     /* #swagger.responses[404] = {
         description: "Not Found.",

@@ -1,5 +1,5 @@
 const app = require('./src/app')
-const { baseWebhookURL } = require('./src/config')
+const { baseWebhookURL, serverTimeout } = require('./src/config')
 require('dotenv').config()
 
 // Start the server
@@ -11,6 +11,13 @@ if (!baseWebhookURL) {
   process.exit(1) // Terminate the application with an error code
 }
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Server running on port ${port}`)
 })
+
+// Configure server timeout settings
+server.timeout = serverTimeout // Use configured timeout
+server.keepAliveTimeout = 65000 // Keep-alive timeout
+server.headersTimeout = 66000 // Headers timeout
+
+module.exports = server

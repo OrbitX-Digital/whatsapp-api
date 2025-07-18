@@ -167,7 +167,7 @@ messageRouter.post('/unstar/:sessionId', [middleware.sessionNameValidation, midd
  */
 const contactRouter = express.Router()
 contactRouter.use(middleware.apikey)
-sessionRouter.use(middleware.contactSwagger)
+contactRouter.use(middleware.contactSwagger)
 routes.use('/contact', contactRouter)
 
 contactRouter.post('/getClassInfo/:sessionId', [middleware.sessionNameValidation, middleware.sessionValidation], contactController.getClassInfo)
@@ -178,6 +178,12 @@ contactRouter.post('/unblock/:sessionId', [middleware.sessionNameValidation, mid
 contactRouter.post('/getFormattedNumber/:sessionId', [middleware.sessionNameValidation, middleware.sessionValidation], contactController.getFormattedNumber)
 contactRouter.post('/getCountryCode/:sessionId', [middleware.sessionNameValidation, middleware.sessionValidation], contactController.getCountryCode)
 contactRouter.post('/getProfilePicUrl/:sessionId', [middleware.sessionNameValidation, middleware.sessionValidation], contactController.getProfilePicUrl)
+contactRouter.get('/activeGroups/:sessionId', [middleware.sessionNameValidation, middleware.sessionValidation], contactController.getActiveGroups)
+contactRouter.get('/activeGroups/:channelToken', [middleware.sessionNameValidation, middleware.sessionValidation], contactController.getActiveGroups)
+contactRouter.get('/activeGroupsBasic/:sessionId', [middleware.sessionNameValidation, middleware.sessionValidation], contactController.getActiveGroupsBasic)
+contactRouter.get('/activeGroupsBasic/:channelToken', [middleware.sessionNameValidation, middleware.sessionValidation], contactController.getActiveGroupsBasic)
+contactRouter.get('/activeGroupsMinimal/:sessionId', [middleware.sessionNameValidation, middleware.sessionValidation], contactController.getActiveGroupsMinimal)
+contactRouter.get('/activeGroupsMinimal/:channelToken', [middleware.sessionNameValidation, middleware.sessionValidation], contactController.getActiveGroupsMinimal)
 /**
  * ================
  * SWAGGER ENDPOINTS
