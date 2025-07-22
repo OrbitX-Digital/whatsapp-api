@@ -30,8 +30,7 @@ const startSession = async (req, res) => {
         }
       }
       */
-      sendErrorResponse(res, 422, setupSessionReturn.message)
-      return
+      return sendErrorResponse(res, 422, setupSessionReturn.message)
     }
     /* #swagger.responses[200] = {
       description: "Status of the initiated session.",
@@ -42,10 +41,14 @@ const startSession = async (req, res) => {
       }
     }
     */
-    // wait until the client is created
-    waitForNestedObject(setupSessionReturn.client, 'pupPage')
-      .then(res.json({ success: true, message: setupSessionReturn.message }))
-      .catch((err) => { sendErrorResponse(res, 500, err.message) })
+    // wait until the client is created with extended timeout for browser pool
+    try {
+      await waitForNestedObject(setupSessionReturn.client, 'pupPage', 120000)
+      return res.json({ success: true, message: setupSessionReturn.message })
+    } catch (timeoutError) {
+      console.log(`[${sessionId}] Browser creation timeout:`, timeoutError.message)
+      return sendErrorResponse(res, 500, `Browser pool timeout: Não foi possível criar browser em 2 minutos`)
+    }
   } catch (error) {
   /* #swagger.responses[500] = {
       description: "Server Failure.",
@@ -57,7 +60,7 @@ const startSession = async (req, res) => {
     }
     */
     console.log('startSession ERROR', error)
-    sendErrorResponse(res, 500, error.message)
+    return sendErrorResponse(res, 500, error.message)
   }
 }
 
