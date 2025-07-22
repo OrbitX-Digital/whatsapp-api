@@ -592,46 +592,82 @@ const getActiveGroups = async (req, res) => {
     const contacts = await client.getContacts();
     console.log(`[PERF] getContacts() completed in ${Date.now() - startTime}ms - Found ${contacts.length} contacts`);
     
+    // LOG DETALHADO - Mostrar estrutura dos primeiros contatos
+    console.log(`[DEBUG] Sample contacts structure:`);
+    contacts.slice(0, 3).forEach((contact, index) => {
+      console.log(`[DEBUG] Contact ${index + 1}:`, {
+        id: contact.id?._serialized,
+        name: contact.name,
+        pushname: contact.pushname,
+        number: contact.number,
+        shortName: contact.shortName,
+        isWAContact: contact.isWAContact,
+        isMyContact: contact.isMyContact,
+        isGroup: contact.id?._serialized?.endsWith('@g.us'),
+        // Mostrar todas as propriedades disponíveis
+        allProperties: Object.keys(contact)
+      });
+    });
+    
     // Filtrar apenas grupos e processar
-    const groups = contacts
-      .filter(contact => contact.id._serialized.endsWith('@g.us'))
-      .map(group => {
-        try {
-          return {
-            id: group.id._serialized,
-            name: group.name || group.pushname || 'Grupo sem nome',
-            subject: group.name || group.pushname || 'Grupo sem nome',
-            owner: 'unknown', // Não disponível em contatos
-            createdAt: null, // Não disponível em contatos
-            description: null, // Não disponível em contatos
-            picture: null,
-            announcementOnly: false, // Não disponível em contatos
-            restrictInfo: false, // Não disponível em contatos
-            participantCount: 0, // Não disponível em contatos
-            participants: [], // Não disponível em contatos
-            myRole: {
-              isAdmin: false, // Não disponível em contatos
-              isSuperAdmin: false // Não disponível em contatos
-            },
-            canIMessage: true,
-            hasMetadata: false,
-            loadedFromCache: true,
-            // Dados disponíveis em contatos
-            number: group.number,
-            shortName: group.shortName,
-            isWAContact: Boolean(group.isWAContact),
-            isMyContact: Boolean(group.isMyContact)
-          };
-        } catch (error) {
-          console.error(`Error processing group ${group.id._serialized}:`, error.message);
-          return null;
-        }
-      })
-      .filter(group => group !== null);
+    const allGroups = contacts.filter(contact => contact.id._serialized.endsWith('@g.us'));
+    console.log(`[DEBUG] Found ${allGroups.length} groups from ${contacts.length} total contacts`);
+    
+    // LOG DETALHADO - Mostrar estrutura dos grupos encontrados
+    console.log(`[DEBUG] Groups structure:`);
+    allGroups.slice(0, 3).forEach((group, index) => {
+      console.log(`[DEBUG] Group ${index + 1}:`, {
+        id: group.id._serialized,
+        name: group.name,
+        pushname: group.pushname,
+        number: group.number,
+        shortName: group.shortName,
+        isWAContact: group.isWAContact,
+        isMyContact: group.isMyContact,
+        // Mostrar todas as propriedades disponíveis no grupo
+        allProperties: Object.keys(group),
+        // Mostrar estrutura completa do objeto group
+        fullObject: JSON.stringify(group, null, 2)
+      });
+    });
+    
+    const groups = allGroups.map(group => {
+      try {
+        return {
+          id: group.id._serialized,
+          name: group.name || group.pushname || 'Grupo sem nome',
+          subject: group.name || group.pushname || 'Grupo sem nome',
+          owner: 'unknown', // Não disponível em contatos
+          createdAt: null, // Não disponível em contatos
+          description: null, // Não disponível em contatos
+          picture: null,
+          announcementOnly: false, // Não disponível em contatos
+          restrictInfo: false, // Não disponível em contatos
+          participantCount: 0, // Não disponível em contatos
+          participants: [], // Não disponível em contatos
+          myRole: {
+            isAdmin: false, // Não disponível em contatos
+            isSuperAdmin: false // Não disponível em contatos
+          },
+          canIMessage: true,
+          hasMetadata: false,
+          loadedFromCache: true,
+          // Dados disponíveis em contatos
+          number: group.number,
+          shortName: group.shortName,
+          isWAContact: Boolean(group.isWAContact),
+          isMyContact: Boolean(group.isMyContact)
+        };
+      } catch (error) {
+        console.error(`Error processing group ${group.id._serialized}:`, error.message);
+        return null;
+      }
+    }).filter(group => group !== null);
 
     const processingTime = Date.now() - startTime;
     
     console.log(`[PERF] getActiveGroups (optimized) completed in ${processingTime}ms - Found ${groups.length} groups`);
+    console.log(`[DEBUG] Final groups processed:`, groups.slice(0, 2)); // Mostrar os 2 primeiros grupos processados
     
     res.json({ 
       success: true, 
