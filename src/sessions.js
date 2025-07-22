@@ -4,6 +4,7 @@ const path = require('path')
 const sessions = new Map()
 const { baseWebhookURL, sessionFolderPath, maxAttachmentSize, setMessagesAsSeen, webVersion, webVersionCacheType, recoverSessions } = require('./config')
 const { triggerWebhook, waitForNestedObject, checkIfEventisEnabled } = require('./utils')
+const { exec } = require('child_process')
 
 // Function to validate if the session is ready
 const validateSession = async (sessionId) => {
@@ -481,9 +482,36 @@ const cleanWhatsAppWebCache = async () => {
   }
 }
 
+// Função para matar todos os processos Chromium/Chrome relacionados a sessões
+const killChromiumProcesses = async () => {
+  return new Promise((resolve) => {
+    let cmd = ''
+    if (process.platform === 'win32') {
+      // Windows: taskkill para chrome e chromium
+      cmd = 'taskkill /F /IM chrome.exe /T & taskkill /F /IM chromium.exe /T'
+    } else {
+      // Linux/Mac: pkill para chrome e chromium
+      cmd = "pkill -f 'chromium.*session-' || pkill -f 'chrome.*session-' || true"
+    }
+    console.log('Matando todos os processos Chromium/Chrome relacionados a sessões...')
+    exec(cmd, (error, stdout, stderr) => {
+      if (error) {
+        console.log('Erro ao matar processos Chromium/Chrome:', error.message)
+      } else {
+        console.log('Processos Chromium/Chrome finalizados.')
+      }
+      resolve()
+    })
+  })
+}
+
 // Function to handle session flush
 const flushSessions = async (deleteOnlyInactive) => {
   try {
+    if (!deleteOnlyInactive) {
+      // 1. Matar todos os processos Chromium/Chrome
+      await killChromiumProcesses()
+    }
     // Read the contents of the sessions folder
     const files = await fs.promises.readdir(sessionFolderPath)
     console.log(`Found ${files.length} files/folders in sessions directory`)
@@ -497,7 +525,6 @@ const flushSessions = async (deleteOnlyInactive) => {
         if (match) {
           const sessionId = match[1]
           console.log(`Deleting session folder: ${sessionId}`)
-          
           // Try to delete the session properly if it's active
           const validation = await validateSession(sessionId)
           if (validation.message !== 'session_not_found') {
@@ -513,7 +540,6 @@ const flushSessions = async (deleteOnlyInactive) => {
           }
         }
       }
-      
       // Also delete any other files in the sessions folder (like message_log.txt)
       for (const file of files) {
         if (!file.match(/^session-/)) {
@@ -526,8 +552,7 @@ const flushSessions = async (deleteOnlyInactive) => {
           }
         }
       }
-      
-      // Clean WhatsApp Web cache when terminating all sessions
+      // 2. Limpar cache do WhatsApp Web
       await cleanWhatsAppWebCache()
     } else {
       // Original logic for deleting only inactive sessions
@@ -542,7 +567,6 @@ const flushSessions = async (deleteOnlyInactive) => {
         }
       }
     }
-    
     console.log('Session flush completed successfully')
   } catch (error) {
     console.log('Session flush error:', error)
