@@ -99,7 +99,21 @@ const setupSession = (sessionId) => {
       puppeteer: {
         executablePath: process.env.CHROME_BIN || null,
         // headless: false,
-        args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu', '--disable-dev-shm-usage']
+        args: [
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+          '--disable-gpu',
+          '--disable-dev-shm-usage',
+          // OTIMIZAÇÕES SEGURAS
+          '--disable-background-timer-throttling',
+          '--disable-backgrounding-occluded-windows',
+          '--disable-renderer-backgrounding',
+          '--disable-features=TranslateUI',
+          '--disable-default-apps',
+          '--disable-extensions',
+          '--disable-plugins',
+          '--disable-sync'
+        ]
       },
       userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36',
       authStrategy: localAuth
@@ -387,19 +401,26 @@ const reloadSession = async (sessionId) => {
     if (!client) {
       return
     }
-    client.pupPage.removeAllListeners('close')
-    client.pupPage.removeAllListeners('error')
+    // Check if pupPage exists before trying to remove listeners
+    if (client.pupPage) {
+      client.pupPage.removeAllListeners('close')
+      client.pupPage.removeAllListeners('error')
+    }
     try {
-      const pages = await client.pupBrowser.pages()
-      await Promise.all(pages.map((page) => page.close()))
-      await Promise.race([
-        client.pupBrowser.close(),
-        new Promise(resolve => setTimeout(resolve, 5000))
-      ])
+      if (client.pupBrowser) {
+        const pages = await client.pupBrowser.pages()
+        await Promise.all(pages.map((page) => page.close()))
+        await Promise.race([
+          client.pupBrowser.close(),
+          new Promise(resolve => setTimeout(resolve, 5000))
+        ])
+      }
     } catch (e) {
-      const childProcess = client.pupBrowser.process()
-      if (childProcess) {
-        childProcess.kill(9)
+      if (client.pupBrowser) {
+        const childProcess = client.pupBrowser.process()
+        if (childProcess) {
+          childProcess.kill(9)
+        }
       }
     }
     sessions.delete(sessionId)
@@ -416,8 +437,11 @@ const deleteSession = async (sessionId, validation) => {
     if (!client) {
       return
     }
-    client.pupPage.removeAllListeners('close')
-    client.pupPage.removeAllListeners('error')
+    // Check if pupPage exists before trying to remove listeners
+    if (client.pupPage) {
+      client.pupPage.removeAllListeners('close')
+      client.pupPage.removeAllListeners('error')
+    }
     if (validation.success) {
       // Client Connected, request logout
       console.log(`Logging out session ${sessionId}`)
@@ -429,9 +453,11 @@ const deleteSession = async (sessionId, validation) => {
     }
     // Wait 10 secs for client.pupBrowser to be disconnected before deleting the folder
     let maxDelay = 0
-    while (client.pupBrowser.isConnected() && (maxDelay < 10)) {
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      maxDelay++
+    if (client.pupBrowser && client.pupBrowser.isConnected) {
+      while (client.pupBrowser.isConnected() && (maxDelay < 10)) {
+        await new Promise(resolve => setTimeout(resolve, 1000))
+        maxDelay++
+      }
     }
     await deleteSessionFolder(sessionId)
     sessions.delete(sessionId)
