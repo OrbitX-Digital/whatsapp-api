@@ -1,4 +1,10 @@
-const swaggerAutogen = require('swagger-autogen')({ openapi: '3.0.0', autoBody: false })
+const swaggerAutogen = require('swagger-autogen')({ 
+  openapi: '3.0.0', 
+  autoBody: false,
+  autoHeaders: false,
+  autoQuery: false,
+  autoResponse: false
+})
 
 const outputFile = './swagger.json'
 const endpointsFiles = ['./src/routes.js']

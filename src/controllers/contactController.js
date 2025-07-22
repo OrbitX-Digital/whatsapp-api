@@ -256,6 +256,8 @@ const unblock = async (req, res) => {
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
+ *     security:
+ *       - apiKeyAuth: []
  */
 // COMENTADO - VERSÃO ANTIGA (LENTA - USA getChats())
 /*
@@ -701,6 +703,8 @@ const getActiveGroups = async (req, res) => {
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
+ *     security:
+ *       - apiKeyAuth: []
  */
 // COMENTADO - VERSÃO ANTIGA (USA getChats())
 /*
@@ -879,6 +883,8 @@ const getActiveGroupsBasic = async (req, res) => {
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
+ *     security:
+ *       - apiKeyAuth: []
  */
 // COMENTADO - VERSÃO ANTIGA (USA getChats())
 /*

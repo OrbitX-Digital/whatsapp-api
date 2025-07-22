@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "WhatsApp API - OTIMIZADA",
-    "description": "API Wrapper for WhatsAppWebJS - **OTIMIZADA** com endpoints de grupos 20x mais rápidos",
+    "title": "WhatsApp API",
+    "description": "API Wrapper for WhatsAppWebJS",
     "version": "1.0.0"
   },
   "servers": [
@@ -27,10 +27,6 @@
     {
       "name": "Message",
       "description": "May fail if the message is too old (Only from the last 100 Messages of the given chat)"
-    },
-    {
-      "name": "Contact",
-      "description": "Contact and group management functions - **OTIMIZADAS** para performance 20x melhor"
     }
   ],
   "paths": {
@@ -45,7 +41,6 @@
             "description": "OK"
           }
         }
-      }
     },
     "/localCallbackExample": {
       "post": {
@@ -82,7 +77,6 @@
             "apiKeyAuth": []
           }
         ]
-      }
     },
     "/session/start/{sessionId}": {
       "get": {
@@ -150,7 +144,6 @@
             "apiKeyAuth": []
           }
         ]
-      }
     },
     "/session/status/{sessionId}": {
       "get": {
@@ -218,7 +211,6 @@
             "apiKeyAuth": []
           }
         ]
-      }
     },
     "/session/qr/{sessionId}": {
       "get": {
@@ -279,7 +271,6 @@
             "apiKeyAuth": []
           }
         ]
-      }
     },
     "/session/qr/{sessionId}/image": {
       "get": {
@@ -343,7 +334,6 @@
             "apiKeyAuth": []
           }
         ]
-      }
     },
     "/session/restart/{sessionId}": {
       "get": {
@@ -411,7 +401,6 @@
             "apiKeyAuth": []
           }
         ]
-      }
     },
     "/session/terminate/{sessionId}": {
       "get": {
@@ -479,7 +468,6 @@
             "apiKeyAuth": []
           }
         ]
-      }
     },
     "/session/terminateInactive": {
       "get": {
@@ -525,7 +513,6 @@
             "apiKeyAuth": []
           }
         ]
-      }
     },
     "/session/terminateAll": {
       "get": {
@@ -571,7 +558,6 @@
             "apiKeyAuth": []
           }
         ]
-      }
     },
     "/client/getClassInfo/{sessionId}": {
       "get": {
@@ -631,7 +617,6 @@
             "apiKeyAuth": []
           }
         ]
-      }
     },
     "/client/acceptInvite/{sessionId}": {
       "post": {
@@ -691,36 +676,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "inviteCode": {
-                    "type": "string",
-                    "description": "Invitation code",
-                    "example": ""
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "inviteCode": {
-                    "type": "string",
-                    "description": "Invitation code",
-                    "example": ""
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/client/archiveChat/{sessionId}": {
       "post": {
@@ -780,36 +735,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "ID of the chat",
-                    "example": ""
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "ID of the chat",
-                    "example": ""
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/client/createGroup/{sessionId}": {
       "post": {
@@ -869,7 +794,6 @@
             "apiKeyAuth": []
           }
         ]
-      }
     },
     "/client/getBlockedContacts/{sessionId}": {
       "post": {
@@ -929,7 +853,6 @@
             "apiKeyAuth": []
           }
         ]
-      }
     },
     "/client/getChatById/{sessionId}": {
       "post": {
@@ -989,36 +912,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "ID of the chat",
-                    "example": ""
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "ID of the chat",
-                    "example": ""
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/client/getChatLabels/{sessionId}": {
       "post": {
@@ -1078,36 +971,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "ID of the chat",
-                    "example": ""
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "ID of the chat",
-                    "example": ""
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/client/getChats/{sessionId}": {
       "get": {
@@ -1167,7 +1030,6 @@
             "apiKeyAuth": []
           }
         ]
-      }
     },
     "/client/getChatsByLabelId/{sessionId}": {
       "post": {
@@ -1227,36 +1089,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "labelId": {
-                    "type": "string",
-                    "description": "ID of the label",
-                    "example": ""
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "labelId": {
-                    "type": "string",
-                    "description": "ID of the label",
-                    "example": ""
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/client/getCommonGroups/{sessionId}": {
       "post": {
@@ -1316,36 +1148,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "contactId": {
-                    "type": "string",
-                    "description": "The whatsapp user's ID (_serialized format)",
-                    "example": ""
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "contactId": {
-                    "type": "string",
-                    "description": "The whatsapp user's ID (_serialized format)",
-                    "example": ""
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/client/getContactById/{sessionId}": {
       "post": {
@@ -1405,36 +1207,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "contactId": {
-                    "type": "string",
-                    "description": "The whatsapp user's ID",
-                    "example": ""
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "contactId": {
-                    "type": "string",
-                    "description": "The whatsapp user's ID",
-                    "example": ""
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/client/getContacts/{sessionId}": {
       "get": {
@@ -1494,7 +1266,6 @@
             "apiKeyAuth": []
           }
         ]
-      }
     },
     "/client/getInviteInfo/{sessionId}": {
       "post": {
@@ -1554,36 +1325,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "inviteCode": {
-                    "type": "string",
-                    "description": "Invitation code",
-                    "example": ""
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "inviteCode": {
-                    "type": "string",
-                    "description": "Invitation code",
-                    "example": ""
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/client/getLabelById/{sessionId}": {
       "post": {
@@ -1643,36 +1384,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "labelId": {
-                    "type": "string",
-                    "description": "ID of the label",
-                    "example": ""
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "labelId": {
-                    "type": "string",
-                    "description": "ID of the label",
-                    "example": ""
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/client/getLabels/{sessionId}": {
       "post": {
@@ -1732,7 +1443,6 @@
             "apiKeyAuth": []
           }
         ]
-      }
     },
     "/client/addOrRemoveLabels/{sessionId}": {
       "post": {
@@ -1792,46 +1502,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "labelIds": {
-                    "type": "array",
-                    "description": "Array of label IDs",
-                    "example": []
-                  },
-                  "chatIds": {
-                    "type": "array",
-                    "description": "Array of chat IDs",
-                    "example": []
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "labelIds": {
-                    "type": "array",
-                    "description": "Array of label IDs",
-                    "example": []
-                  },
-                  "chatIds": {
-                    "type": "array",
-                    "description": "Array of chat IDs",
-                    "example": []
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/client/getNumberId/{sessionId}": {
       "post": {
@@ -1891,36 +1561,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "number": {
-                    "type": "string",
-                    "description": "The number or ID ('@c.us' will be automatically appended if not specified)",
-                    "example": "6281288888888"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "number": {
-                    "type": "string",
-                    "description": "The number or ID ('@c.us' will be automatically appended if not specified)",
-                    "example": "6281288888888"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/client/isRegisteredUser/{sessionId}": {
       "post": {
@@ -1980,36 +1620,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "number": {
-                    "type": "string",
-                    "description": "The number or ID ('@c.us' will be automatically appended if not specified)",
-                    "example": "6281288888888"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "number": {
-                    "type": "string",
-                    "description": "The number or ID ('@c.us' will be automatically appended if not specified)",
-                    "example": "6281288888888"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/client/getProfilePicUrl/{sessionId}": {
       "post": {
@@ -2069,36 +1679,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "contactId": {
-                    "type": "string",
-                    "description": "The contact ID's of profile",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "contactId": {
-                    "type": "string",
-                    "description": "The contact ID's of profile",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/client/getState/{sessionId}": {
       "get": {
@@ -2148,7 +1728,6 @@
             "apiKeyAuth": []
           }
         ]
-      }
     },
     "/client/markChatUnread/{sessionId}": {
       "post": {
@@ -2208,36 +1787,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "ID of the chat",
-                    "example": ""
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "ID of the chat",
-                    "example": ""
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/client/muteChat/{sessionId}": {
       "post": {
@@ -2297,46 +1846,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "ID of the chat",
-                    "example": ""
-                  },
-                  "unmuteDate": {
-                    "type": "string",
-                    "description": "Date when the chat will be muted, leave as is to mute forever",
-                    "example": ""
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "ID of the chat",
-                    "example": ""
-                  },
-                  "unmuteDate": {
-                    "type": "string",
-                    "description": "Date when the chat will be muted, leave as is to mute forever",
-                    "example": ""
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/client/pinChat/{sessionId}": {
       "post": {
@@ -2396,36 +1905,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "ID of the chat",
-                    "example": ""
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "ID of the chat",
-                    "example": ""
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/client/searchMessages/{sessionId}": {
       "post": {
@@ -2485,46 +1964,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "query": {
-                    "type": "string",
-                    "description": "Search string",
-                    "example": ""
-                  },
-                  "options": {
-                    "type": "object",
-                    "description": "Search options",
-                    "example": {}
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "query": {
-                    "type": "string",
-                    "description": "Search string",
-                    "example": ""
-                  },
-                  "options": {
-                    "type": "object",
-                    "description": "Search options",
-                    "example": {}
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/client/sendMessage/{sessionId}": {
       "post": {
@@ -2584,141 +2023,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "The Chat id which contains the message (Group or Individual)"
-                  },
-                  "contentType": {
-                    "type": "string",
-                    "description": "The type of message content, must be one of the following: string, MessageMedia, MessageMediaFromURL, Location, Buttons, or List"
-                  },
-                  "content": {
-                    "type": "object",
-                    "description": "The content of the message, can be a string or an object"
-                  },
-                  "options": {
-                    "type": "object",
-                    "description": "The message send options"
-                  }
-                }
-              },
-              "examples": {
-                "string": {
-                  "value": {
-                    "chatId": "6281288888888@c.us",
-                    "contentType": "string",
-                    "content": "Hello World!"
-                  }
-                },
-                "MessageMedia": {
-                  "value": {
-                    "chatId": "6281288888888@c.us",
-                    "contentType": "MessageMedia",
-                    "content": {
-                      "mimetype": "image/jpeg",
-                      "data": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=",
-                      "filename": "image.jpg"
-                    }
-                  }
-                },
-                "MessageMediaFromURL": {
-                  "value": {
-                    "chatId": "6281288888888@c.us",
-                    "contentType": "MessageMediaFromURL",
-                    "content": "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example"
-                  }
-                },
-                "Location": {
-                  "value": {
-                    "chatId": "6281288888888@c.us",
-                    "contentType": "Location",
-                    "content": {
-                      "latitude": -6.2,
-                      "longitude": 106.8,
-                      "description": "Jakarta"
-                    }
-                  }
-                },
-                "Buttons": {
-                  "value": {
-                    "chatId": "6281288888888@c.us",
-                    "contentType": "Buttons",
-                    "content": {
-                      "body": "Hello World!",
-                      "buttons": [
-                        {
-                          "body": "button 1"
-                        }
-                      ],
-                      "title": "Hello World!",
-                      "footer": "Hello World!"
-                    }
-                  }
-                },
-                "List": {
-                  "value": {
-                    "chatId": "6281288888888@c.us",
-                    "contentType": "List",
-                    "content": {
-                      "body": "Hello World!",
-                      "buttonText": "Hello World!",
-                      "sections": [
-                        {
-                          "title": "sectionTitle",
-                          "rows": [
-                            {
-                              "id": "customId",
-                              "title": "ListItem2",
-                              "description": "desc"
-                            },
-                            {
-                              "title": "ListItem2"
-                            }
-                          ]
-                        }
-                      ],
-                      "title": "Hello World!",
-                      "footer": "Hello World!"
-                    }
-                  }
-                },
-                "Contact": {
-                  "value": {
-                    "chatId": "6281288888888@c.us",
-                    "contentType": "Contact",
-                    "content": {
-                      "contactId": "6281288888889@c.us"
-                    }
-                  }
-                },
-                "Poll": {
-                  "value": {
-                    "chatId": "6281288888888@c.us",
-                    "contentType": "Poll",
-                    "content": {
-                      "pollName": "Cats or Dogs?",
-                      "pollOptions": [
-                        "Cats",
-                        "Dogs"
-                      ],
-                      "options": {
-                        "allowMultipleAnswers": true
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/client/sendPresenceAvailable/{sessionId}": {
       "post": {
@@ -2778,7 +2082,6 @@
             "apiKeyAuth": []
           }
         ]
-      }
     },
     "/client/sendPresenceUnavailable/{sessionId}": {
       "post": {
@@ -2838,7 +2141,6 @@
             "apiKeyAuth": []
           }
         ]
-      }
     },
     "/client/sendSeen/{sessionId}": {
       "post": {
@@ -2898,36 +2200,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "ID of the chat",
-                    "example": ""
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "ID of the chat",
-                    "example": ""
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/client/setDisplayName/{sessionId}": {
       "post": {
@@ -2987,36 +2259,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "displayName": {
-                    "type": "string",
-                    "description": "New display name",
-                    "example": ""
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "displayName": {
-                    "type": "string",
-                    "description": "New display name",
-                    "example": ""
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/client/setProfilePicture/{sessionId}": {
       "post": {
@@ -3076,46 +2318,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "pictureMimetype": {
-                    "type": "string",
-                    "description": "The mimetype of the picture to set as the profile picture for the user WhatsApp account.",
-                    "example": "image/png"
-                  },
-                  "pictureData": {
-                    "type": "string",
-                    "description": "The base64 data of the picture to set as the profile picture for the user WhatsApp account.",
-                    "example": "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX +/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII="
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "pictureMimetype": {
-                    "type": "string",
-                    "description": "The mimetype of the picture to set as the profile picture for the user WhatsApp account.",
-                    "example": "image/png"
-                  },
-                  "pictureData": {
-                    "type": "string",
-                    "description": "The base64 data of the picture to set as the profile picture for the user WhatsApp account.",
-                    "example": "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX +/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII="
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/client/setStatus/{sessionId}": {
       "post": {
@@ -3175,36 +2377,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "status": {
-                    "type": "string",
-                    "description": "New status message",
-                    "example": "I'm running WhatsApp Web Api"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "status": {
-                    "type": "string",
-                    "description": "New status message",
-                    "example": "I'm running WhatsApp Web Api"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/client/unarchiveChat/{sessionId}": {
       "post": {
@@ -3264,36 +2436,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "ID of the chat",
-                    "example": ""
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "ID of the chat",
-                    "example": ""
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/client/unmuteChat/{sessionId}": {
       "post": {
@@ -3353,36 +2495,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "ID of the chat",
-                    "example": ""
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "ID of the chat",
-                    "example": ""
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/client/unpinChat/{sessionId}": {
       "post": {
@@ -3442,36 +2554,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "ID of the chat",
-                    "example": ""
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "ID of the chat",
-                    "example": ""
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/client/getWWebVersion/{sessionId}": {
       "get": {
@@ -3531,7 +2613,6 @@
             "apiKeyAuth": []
           }
         ]
-      }
     },
     "/chat/getClassInfo/{sessionId}": {
       "post": {
@@ -3591,36 +2672,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/chat/clearMessages/{sessionId}": {
       "post": {
@@ -3680,36 +2731,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/chat/clearState/{sessionId}": {
       "post": {
@@ -3769,36 +2790,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/chat/delete/{sessionId}": {
       "post": {
@@ -3858,36 +2849,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/chat/fetchMessages/{sessionId}": {
       "post": {
@@ -3947,46 +2908,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  },
-                  "searchOptions": {
-                    "type": "object",
-                    "description": "Search options for fetching messages",
-                    "example": "{}"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  },
-                  "searchOptions": {
-                    "type": "object",
-                    "description": "Search options for fetching messages",
-                    "example": "{}"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/chat/getContact/{sessionId}": {
       "post": {
@@ -4046,36 +2967,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/chat/sendStateRecording/{sessionId}": {
       "post": {
@@ -4135,36 +3026,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/chat/sendStateTyping/{sessionId}": {
       "post": {
@@ -4224,36 +3085,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/groupChat/getClassInfo/{sessionId}": {
       "post": {
@@ -4313,36 +3144,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/groupChat/addParticipants/{sessionId}": {
       "post": {
@@ -4402,36 +3203,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/groupChat/demoteParticipants/{sessionId}": {
       "post": {
@@ -4491,36 +3262,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/groupChat/getInviteCode/{sessionId}": {
       "post": {
@@ -4580,36 +3321,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/groupChat/leave/{sessionId}": {
       "post": {
@@ -4669,36 +3380,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/groupChat/promoteParticipants/{sessionId}": {
       "post": {
@@ -4758,36 +3439,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/groupChat/removeParticipants/{sessionId}": {
       "post": {
@@ -4847,36 +3498,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/groupChat/revokeInvite/{sessionId}": {
       "post": {
@@ -4936,36 +3557,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/groupChat/setDescription/{sessionId}": {
       "post": {
@@ -5025,36 +3616,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/groupChat/setInfoAdminsOnly/{sessionId}": {
       "post": {
@@ -5114,36 +3675,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/groupChat/setMessagesAdminsOnly/{sessionId}": {
       "post": {
@@ -5203,36 +3734,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/groupChat/setSubject/{sessionId}": {
       "post": {
@@ -5292,36 +3793,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/groupChat/setPicture/{sessionId}": {
       "post": {
@@ -5381,36 +3852,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/groupChat/deletePicture/{sessionId}": {
       "post": {
@@ -5470,36 +3911,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the given Chat (either group or personnal)",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/message/getClassInfo/{sessionId}": {
       "post": {
@@ -5559,46 +3970,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "The Chat id which contains the message",
-                    "example": "6281288888888@c.us"
-                  },
-                  "messageId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the message",
-                    "example": "ABCDEF999999999"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "The Chat id which contains the message",
-                    "example": "6281288888888@c.us"
-                  },
-                  "messageId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the message",
-                    "example": "ABCDEF999999999"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/message/delete/{sessionId}": {
       "post": {
@@ -5658,46 +4029,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "The Chat id which contains the message",
-                    "example": "6281288888888@c.us"
-                  },
-                  "messageId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the message",
-                    "example": "ABCDEF999999999"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "The Chat id which contains the message",
-                    "example": "6281288888888@c.us"
-                  },
-                  "messageId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the message",
-                    "example": "ABCDEF999999999"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/message/downloadMedia/{sessionId}": {
       "post": {
@@ -5757,46 +4088,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "The Chat id which contains the message",
-                    "example": "6281288888888@c.us"
-                  },
-                  "messageId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the message",
-                    "example": "ABCDEF999999999"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "The Chat id which contains the message",
-                    "example": "6281288888888@c.us"
-                  },
-                  "messageId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the message",
-                    "example": "ABCDEF999999999"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/message/forward/{sessionId}": {
       "post": {
@@ -5856,46 +4147,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "The Chat id which contains the message",
-                    "example": "6281288888888@c.us"
-                  },
-                  "messageId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the message",
-                    "example": "ABCDEF999999999"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "The Chat id which contains the message",
-                    "example": "6281288888888@c.us"
-                  },
-                  "messageId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the message",
-                    "example": "ABCDEF999999999"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/message/getInfo/{sessionId}": {
       "post": {
@@ -5955,46 +4206,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "The Chat id which contains the message",
-                    "example": "6281288888888@c.us"
-                  },
-                  "messageId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the message",
-                    "example": "ABCDEF999999999"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "The Chat id which contains the message",
-                    "example": "6281288888888@c.us"
-                  },
-                  "messageId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the message",
-                    "example": "ABCDEF999999999"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/message/getMentions/{sessionId}": {
       "post": {
@@ -6054,46 +4265,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "The Chat id which contains the message",
-                    "example": "6281288888888@c.us"
-                  },
-                  "messageId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the message",
-                    "example": "ABCDEF999999999"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "The Chat id which contains the message",
-                    "example": "6281288888888@c.us"
-                  },
-                  "messageId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the message",
-                    "example": "ABCDEF999999999"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/message/getOrder/{sessionId}": {
       "post": {
@@ -6153,46 +4324,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "The Chat id which contains the message",
-                    "example": "6281288888888@c.us"
-                  },
-                  "messageId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the message",
-                    "example": "ABCDEF999999999"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "The Chat id which contains the message",
-                    "example": "6281288888888@c.us"
-                  },
-                  "messageId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the message",
-                    "example": "ABCDEF999999999"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/message/getPayment/{sessionId}": {
       "post": {
@@ -6252,46 +4383,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "The Chat id which contains the message",
-                    "example": "6281288888888@c.us"
-                  },
-                  "messageId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the message",
-                    "example": "ABCDEF999999999"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "The Chat id which contains the message",
-                    "example": "6281288888888@c.us"
-                  },
-                  "messageId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the message",
-                    "example": "ABCDEF999999999"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/message/getQuotedMessage/{sessionId}": {
       "post": {
@@ -6351,46 +4442,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "The Chat id which contains the message",
-                    "example": "6281288888888@c.us"
-                  },
-                  "messageId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the message",
-                    "example": "ABCDEF999999999"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "The Chat id which contains the message",
-                    "example": "6281288888888@c.us"
-                  },
-                  "messageId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the message",
-                    "example": "ABCDEF999999999"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/message/react/{sessionId}": {
       "post": {
@@ -6450,46 +4501,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "The Chat id which contains the message",
-                    "example": "6281288888888@c.us"
-                  },
-                  "messageId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the message",
-                    "example": "ABCDEF999999999"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "The Chat id which contains the message",
-                    "example": "6281288888888@c.us"
-                  },
-                  "messageId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the message",
-                    "example": "ABCDEF999999999"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/message/reply/{sessionId}": {
       "post": {
@@ -6549,46 +4560,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "The Chat id which contains the message",
-                    "example": "6281288888888@c.us"
-                  },
-                  "messageId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the message",
-                    "example": "ABCDEF999999999"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "The Chat id which contains the message",
-                    "example": "6281288888888@c.us"
-                  },
-                  "messageId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the message",
-                    "example": "ABCDEF999999999"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/message/star/{sessionId}": {
       "post": {
@@ -6648,46 +4619,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "The Chat id which contains the message",
-                    "example": "6281288888888@c.us"
-                  },
-                  "messageId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the message",
-                    "example": "ABCDEF999999999"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "The Chat id which contains the message",
-                    "example": "6281288888888@c.us"
-                  },
-                  "messageId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the message",
-                    "example": "ABCDEF999999999"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/message/unstar/{sessionId}": {
       "post": {
@@ -6747,46 +4678,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "The Chat id which contains the message",
-                    "example": "6281288888888@c.us"
-                  },
-                  "messageId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the message",
-                    "example": "ABCDEF999999999"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "The Chat id which contains the message",
-                    "example": "6281288888888@c.us"
-                  },
-                  "messageId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the message",
-                    "example": "ABCDEF999999999"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/contact/getClassInfo/{sessionId}": {
       "post": {
@@ -6846,36 +4737,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "contactId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the contact",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "contactId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the contact",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/contact/block/{sessionId}": {
       "post": {
@@ -6935,36 +4796,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "contactId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the contact",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "contactId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the contact",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/contact/getAbout/{sessionId}": {
       "post": {
@@ -7024,36 +4855,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "contactId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the contact",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "contactId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the contact",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/contact/getChat/{sessionId}": {
       "post": {
@@ -7113,36 +4914,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "contactId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the contact",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "contactId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the contact",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/contact/unblock/{sessionId}": {
       "post": {
@@ -7202,36 +4973,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "contactId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the contact",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "contactId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the contact",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/contact/getFormattedNumber/{sessionId}": {
       "post": {
@@ -7291,36 +5032,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "contactId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the contact",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "contactId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the contact",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/contact/getCountryCode/{sessionId}": {
       "post": {
@@ -7380,36 +5091,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "contactId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the contact",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "contactId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the contact",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/contact/getProfilePicUrl/{sessionId}": {
       "post": {
@@ -7469,44 +5150,13 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "contactId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the contact",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "contactId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the contact",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/contact/activeGroups/{sessionId}": {
       "get": {
         "tags": [
           "Contact"
         ],
-        "summary": "Get all active groups (OPTIMIZED - 20x faster)",
-        "description": "Retrieves all active WhatsApp groups where the user is a participant. **OTIMIZADO** - Usa getContacts() em vez de getChats() para performance 20x melhor. - Antes: 10+ minutos - Agora: ~50ms",
+        "description": "",
         "parameters": [
           {
             "name": "sessionId",
@@ -7521,14 +5171,7 @@
         ],
         "responses": {
           "200": {
-            "description": "List of active groups retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ActiveGroupsResponse"
-                }
-              }
-            }
+            "description": "OK"
           },
           "403": {
             "description": "Forbidden.",
@@ -7565,8 +5208,7 @@
           {
             "apiKeyAuth": []
           }
-        ]
-      }
+        ],
     },
     "/contact/activeGroups/{channelToken}": {
       "get": {
@@ -7634,44 +5276,13 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "contactId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the contact",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "contactId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the contact",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/contact/activeGroupsBasic/{sessionId}": {
       "get": {
         "tags": [
           "Contact"
         ],
-        "summary": "Get active groups with basic info (OPTIMIZED - 10x faster)",
-        "description": "Retrieves active WhatsApp groups with basic information only. **OTIMIZADO** - Usa getContacts() em vez de getChats() para performance 10x melhor. - Antes: 2-5 minutos - Agora: ~30ms Ideal para listas simples e rápidas.",
+        "description": "",
         "parameters": [
           {
             "name": "sessionId",
@@ -7686,14 +5297,7 @@
         ],
         "responses": {
           "200": {
-            "description": "List of active groups with basic info retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ActiveGroupsBasicResponse"
-                }
-              }
-            }
+            "description": "OK"
           },
           "403": {
             "description": "Forbidden.",
@@ -7730,8 +5334,7 @@
           {
             "apiKeyAuth": []
           }
-        ]
-      }
+        ],
     },
     "/contact/activeGroupsBasic/{channelToken}": {
       "get": {
@@ -7799,44 +5402,13 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "contactId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the contact",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "contactId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the contact",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "/contact/activeGroupsMinimal/{sessionId}": {
       "get": {
         "tags": [
           "Contact"
         ],
-        "summary": "Get active groups with minimal data (OPTIMIZED - 15x faster)",
-        "description": "Retrieves active WhatsApp groups with minimal essential data only. **OTIMIZADO** - Usa getContacts() em vez de getChats() para performance 15x melhor. - Antes: 30 segundos - Agora: ~20ms Designed for maximum performance and minimal data transfer. Returns only: userPhoneNumber, group id, name.",
+        "description": "",
         "parameters": [
           {
             "name": "sessionId",
@@ -7851,14 +5423,7 @@
         ],
         "responses": {
           "200": {
-            "description": "List of active groups with minimal data retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ActiveGroupsMinimalResponse"
-                }
-              }
-            }
+            "description": "OK"
           },
           "403": {
             "description": "Forbidden.",
@@ -7895,8 +5460,7 @@
           {
             "apiKeyAuth": []
           }
-        ]
-      }
+        ],
     },
     "/contact/activeGroupsMinimal/{channelToken}": {
       "get": {
@@ -7964,36 +5528,6 @@
             "apiKeyAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "contactId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the contact",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "contactId": {
-                    "type": "string",
-                    "description": "Unique whatsApp identifier for the contact",
-                    "example": "6281288888888@c.us"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     }
   },
   "components": {
@@ -8129,254 +5663,12 @@
         "xml": {
           "name": "ForbiddenResponse"
         }
-      },
-      "ActiveGroupsResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean",
-            "example": true
-          },
-          "userPhoneNumber": {
-            "type": "string",
-            "example": "5511999999999"
-          },
-          "result": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string",
-                  "example": "123456789@g.us"
-                },
-                "name": {
-                  "type": "string",
-                  "example": "Nome do Grupo"
-                },
-                "subject": {
-                  "type": "string",
-                  "example": "Nome do Grupo"
-                },
-                "owner": {
-                  "type": "string",
-                  "example": "unknown"
-                },
-                "createdAt": {
-                  "type": "string",
-                  "nullable": true,
-                  "example": null
-                },
-                "description": {
-                  "type": "string",
-                  "nullable": true,
-                  "example": null
-                },
-                "picture": {
-                  "type": "string",
-                  "nullable": true,
-                  "example": null
-                },
-                "announcementOnly": {
-                  "type": "boolean",
-                  "example": false
-                },
-                "restrictInfo": {
-                  "type": "boolean",
-                  "example": false
-                },
-                "participantCount": {
-                  "type": "integer",
-                  "example": 0
-                },
-                "participants": {
-                  "type": "array",
-                  "items": {
-                    "type": "object"
-                  },
-                  "example": []
-                },
-                "myRole": {
-                  "type": "object",
-                  "properties": {
-                    "isAdmin": {
-                      "type": "boolean",
-                      "example": false
-                    },
-                    "isSuperAdmin": {
-                      "type": "boolean",
-                      "example": false
-                    }
-                  }
-                },
-                "canIMessage": {
-                  "type": "boolean",
-                  "example": true
-                },
-                "hasMetadata": {
-                  "type": "boolean",
-                  "example": false
-                },
-                "loadedFromCache": {
-                  "type": "boolean",
-                  "example": true
-                },
-                "number": {
-                  "type": "string",
-                  "example": "123456789"
-                },
-                "shortName": {
-                  "type": "string",
-                  "example": "Grupo"
-                },
-                "isWAContact": {
-                  "type": "boolean",
-                  "example": true
-                },
-                "isMyContact": {
-                  "type": "boolean",
-                  "example": false
-                }
-              }
-            }
-          },
-          "metadata": {
-            "type": "object",
-            "properties": {
-              "totalContacts": {
-                "type": "integer",
-                "example": 150
-              },
-              "totalGroups": {
-                "type": "integer",
-                "example": 25
-              },
-              "processingTimeMs": {
-                "type": "integer",
-                "example": 45
-              },
-              "method": {
-                "type": "string",
-                "example": "contacts-optimized"
-              },
-              "performance": {
-                "type": "string",
-                "example": "excellent"
-              }
-            }
-          }
-        },
-        "xml": {
-          "name": "ActiveGroupsResponse"
-        }
-      },
-      "ActiveGroupsBasicResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean",
-            "example": true
-          },
-          "userPhoneNumber": {
-            "type": "string",
-            "example": "5511999999999"
-          },
-          "result": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string",
-                  "example": "123456789@g.us"
-                },
-                "name": {
-                  "type": "string",
-                  "example": "Nome do Grupo"
-                },
-                "participantCount": {
-                  "type": "integer",
-                  "example": 0
-                },
-                "isAdmin": {
-                  "type": "boolean",
-                  "example": false
-                },
-                "isGroup": {
-                  "type": "boolean",
-                  "example": true
-                }
-              }
-            }
-          },
-          "metadata": {
-            "type": "object",
-            "properties": {
-              "processingTimeMs": {
-                "type": "integer",
-                "example": 30
-              },
-              "totalGroups": {
-                "type": "integer",
-                "example": 25
-              },
-              "method": {
-                "type": "string",
-                "example": "contacts-basic-optimized"
-              }
-            }
-          }
-        },
-        "xml": {
-          "name": "ActiveGroupsBasicResponse"
-        }
-      },
-      "ActiveGroupsMinimalResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean",
-            "example": true
-          },
-          "userPhoneNumber": {
-            "type": "string",
-            "example": "5511999999999"
-          },
-          "result": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string",
-                  "example": "123456789@g.us"
-                },
-                "name": {
-                  "type": "string",
-                  "example": "Nome do Grupo"
-                },
-                "participants": {
-                  "type": "array",
-                  "items": {
-                    "type": "object"
-                  },
-                  "example": []
-                }
-              }
-            }
-          }
-        },
-        "xml": {
-          "name": "ActiveGroupsMinimalResponse"
-        }
-      }
     },
     "securitySchemes": {
       "apiKeyAuth": {
         "type": "apiKey",
         "in": "header",
         "name": "x-api-key"
-      }
     }
   }
 }
