@@ -210,8 +210,18 @@ const setupSession = (sessionId) => {
       
       // === CONFIGURAÇÃO ESPECÍFICA DO PUPPETEER ISOLADO ===
       puppeteer: {
-        // A configuração será obtida dinamicamente pelo browserPool
-        // que usa getIsolatedSessionConfig(sessionId)
+        executablePath: '/usr/bin/chromium-browser', // CRITICAL: Chromium path
+        headless: true,
+        args: [
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+          '--disable-dev-shm-usage',
+          '--disable-accelerated-2d-canvas',
+          '--no-first-run',
+          '--no-zygote',
+          '--disable-gpu',
+          '--disable-software-rasterizer'
+        ],
         handleSIGINT: false,
         handleSIGTERM: false,
         handleSIGHUP: false
