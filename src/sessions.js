@@ -305,9 +305,30 @@ const setupSession = (sessionId) => {
       // sessionMonitor.unregisterSession(sessionId)
     })
 
-    // Message
+    // === MESSAGE HANDLER COM THROTTLING PARA REDUZIR CPU ===
+    // Baseado em: https://medium.com/@rusieshvili.joni/data-batching-in-nodejs-a38e92aee910
+    let messageCount = 0
+    let lastLogTime = Date.now()
+    const MESSAGE_LOG_INTERVAL = 2000 // 2 segundos
+    const MESSAGE_BATCH_SIZE = 10 // Agrupa a cada 10 mensagens
+    
     client.on('message', (message) => {
-      console.log(`[${sessionId}] 📨 Nova mensagem recebida`)
+      messageCount++
+      const now = Date.now()
+      
+      // Log apenas a cada 2 segundos OU a cada 10 mensagens (batching)
+      if (now - lastLogTime > MESSAGE_LOG_INTERVAL || messageCount >= MESSAGE_BATCH_SIZE) {
+        if (messageCount === 1) {
+          console.log(`[${sessionId}] 📨 Nova mensagem recebida`)
+        } else {
+          const timeElapsed = Math.round((now - lastLogTime) / 1000)
+          console.log(`[${sessionId}] 📨 ${messageCount} mensagens recebidas (${timeElapsed}s)`)
+        }
+        
+        // Reset counters
+        messageCount = 0
+        lastLogTime = now
+      }
     })
 
     // Error
