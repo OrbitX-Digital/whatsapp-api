@@ -6,7 +6,7 @@
 // === FUNÇÃO PRINCIPAL PARA CONFIGURAÇÃO OTIMIZADA DO PUPPETEER ===
 const getOptimalPuppeteerConfig = () => {
   return {
-    headless: 'new', // Usar a nova engine headless
+    headless: true, // Usar headless true (mais estável que 'new')
     
     // === ARGUMENTOS OTIMIZADOS PARA ESTABILIDADE E PERFORMANCE ===
     args: [
@@ -44,6 +44,17 @@ const getOptimalPuppeteerConfig = () => {
       '--disable-features=MediaRouter',
       '--disable-blink-features=AutomationControlled',
       '--disable-client-side-phishing-detection',
+      
+      // === ESPECÍFICOS PARA WHATSAPP-WEB.JS ===
+      '--disable-web-security',
+      '--disable-features=VizDisplayCompositor',
+      '--autoplay-policy=user-gesture-required',
+      '--disable-background-networking',
+      '--disable-background-timer-throttling',
+      '--disable-backgrounding-occluded-windows',
+      '--disable-renderer-backgrounding',
+      '--disable-field-trial-config',
+      '--disable-ipc-flooding-protection',
       '--disable-component-extensions-with-background-pages',
       '--disable-datasaver-prompt',
       '--disable-desktop-notifications',
@@ -87,11 +98,11 @@ const getOptimalPuppeteerConfig = () => {
       isLandscape: true
     },
     
-    // === TIMEOUTS OTIMIZADOS ===
-    timeout: 90000, // Aumentado para 1.5 minutos para inicialização mais estável
+    // === TIMEOUTS OTIMIZADOS (AUMENTADOS PARA MÚLTIPLAS SESSÕES) ===
+    timeout: 180000, // 3 minutos para inicialização de browser
     
     // === CONFIGURAÇÕES DE PROTOCOLO ===
-    protocolTimeout: 240000, // Aumentado para 4 minutos para comandos
+    protocolTimeout: 300000, // 5 minutos para comandos complexos
     
     // === CONFIGURAÇÕES EXPERIMENTAIS ===
     ignoreDefaultArgs: false,
@@ -124,8 +135,8 @@ const getEnvironmentConfig = () => {
     );
     
     // Configurações específicas para container
-    baseConfig.timeout = 120000; // 2 minutos em Docker
-    baseConfig.protocolTimeout = 300000; // 5 minutos em Docker
+    baseConfig.timeout = 240000; // 4 minutos em Docker (mais generoso)
+    baseConfig.protocolTimeout = 360000; // 6 minutos em Docker
   }
   
   if (!isProduction) {

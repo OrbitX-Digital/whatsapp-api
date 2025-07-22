@@ -13,7 +13,7 @@ const sendErrorResponse = (res, status, message) => {
 }
 
 // Function to wait for a specific item not to be null
-const waitForNestedObject = (rootObj, nestedPath, maxWaitTime = 120000, interval = 500) => {
+const waitForNestedObject = (rootObj, nestedPath, maxWaitTime = 300000, interval = 1000) => {
   const start = Date.now()
   return new Promise((resolve, reject) => {
     const checkObject = () => {

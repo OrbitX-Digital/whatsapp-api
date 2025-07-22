@@ -43,11 +43,11 @@ const startSession = async (req, res) => {
     */
     // wait until the client is created with extended timeout for browser pool
     try {
-      await waitForNestedObject(setupSessionReturn.client, 'pupPage', 120000)
+      await waitForNestedObject(setupSessionReturn.client, 'pupPage', 300000)
       return res.json({ success: true, message: setupSessionReturn.message })
     } catch (timeoutError) {
       console.log(`[${sessionId}] Browser creation timeout:`, timeoutError.message)
-      return sendErrorResponse(res, 500, `Browser pool timeout: Não foi possível criar browser em 2 minutos`)
+      return sendErrorResponse(res, 500, `Browser pool timeout: Não foi possível criar browser em 5 minutos`)
     }
   } catch (error) {
   /* #swagger.responses[500] = {
