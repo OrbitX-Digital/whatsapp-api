@@ -149,6 +149,39 @@ const doc = {
           participants: []
         }
       ]
+    },
+    ActiveGroupsMinimalHybridResponse: {
+      success: true,
+      userPhoneNumber: '5511999999999',
+      result: [
+        {
+          id: '123456789@g.us',
+          name: 'Nome do Grupo',
+          participants: [
+            {
+              id: '554384376593@c.us',
+              isAdmin: false,
+              isSuperAdmin: false
+            }
+          ],
+          participantCount: 1,
+          owner: '554384376593@c.us',
+          description: 'Descrição do grupo',
+          createdAt: '2024-01-01T00:00:00.000Z',
+          myRole: {
+            isAdmin: false,
+            isSuperAdmin: false
+          },
+          hasDetails: true
+        }
+      ],
+      metadata: {
+        totalGroups: 25,
+        groupsWithDetails: 1,
+        processingTimeMs: 150,
+        method: 'hybrid-with-details',
+        performance: 'good'
+      }
     }
   }
 }

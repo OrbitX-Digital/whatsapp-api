@@ -867,31 +867,30 @@ const getActiveGroupsBasic = async (req, res) => {
 };
 
 /**
- * Retrieves active groups with minimal essential data only (ULTRA OPTIMIZED VERSION)
- * Returns only: userPhoneNumber, group id, name, and participants with basic info
- * Designed for maximum performance and minimal data transfer
+ * Retrieves active groups with optional detailed information
+ * HYBRID SOLUTION - Combines speed of getContacts() with richness of getChatById()
  * 
  * @async
  * @function getActiveGroupsMinimal
  * @param {Object} req - The request object.
  * @param {Object} res - The response object.
  * @param {string} req.params.sessionId - The session ID.
+ * @param {string} req.query.withDetails - If "true", fetches detailed group information including participants.
+ * @param {string} req.query.groupIds - Comma-separated list of specific group IDs to get details for.
  * @throws {Error} If there is an error retrieving the active groups.
- * @returns {Promise<void>} A promise that resolves with the list of active groups with minimal data.
+ * @returns {Promise<void>} A promise that resolves with the list of active groups.
  * 
  * @swagger
  * /contact/activeGroupsMinimal/{sessionId}:
  *   get:
  *     tags:
  *       - Contact
- *     summary: Get active groups with minimal data (OPTIMIZED - 15x faster)
+ *     summary: Get active groups with optional details (HYBRID - Ultra fast + rich data)
  *     description: |
- *       Retrieves active WhatsApp groups with minimal essential data only.
- *       **OTIMIZADO** - Usa getContacts() em vez de getChats() para performance 15x melhor.
- *       - Antes: 30 segundos
- *       - Agora: ~20ms
- *       Designed for maximum performance and minimal data transfer.
- *       Returns only: userPhoneNumber, group id, name.
+ *       **SOLUÇÃO HÍBRIDA** - Combina velocidade e riqueza de dados.
+ *       - Lista rápida com getContacts() (~20ms)
+ *       - Detalhes opcionais com getChatById() quando solicitado
+ *       - Parâmetros: withDetails=true&groupIds=id1,id2,id3
  *     parameters:
  *       - name: sessionId
  *         in: path
@@ -900,13 +899,27 @@ const getActiveGroupsBasic = async (req, res) => {
  *           type: string
  *         description: Unique identifier for the session
  *         example: "f8377d8d-a589-4242-9ba6-9486a04ef80c"
+ *       - name: withDetails
+ *         in: query
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: If "true", fetches detailed group information including participants
+ *         example: "true"
+ *       - name: groupIds
+ *         in: query
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: Comma-separated list of specific group IDs to get details for
+ *         example: "120363409496249870@g.us,120363389038712104@g.us"
  *     responses:
  *       200:
- *         description: List of active groups with minimal data retrieved successfully
+ *         description: List of active groups retrieved successfully
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ActiveGroupsMinimalResponse'
+ *               $ref: '#/components/schemas/ActiveGroupsMinimalHybridResponse'
  *       404:
  *         description: Session not found or not connected
  *         content:
@@ -1005,7 +1018,7 @@ const getActiveGroupsMinimal = async (req, res) => {
 };
 */
 
-// NOVA VERSÃO OTIMIZADA - USA getContacts()
+// SOLUÇÃO HÍBRIDA - Combina velocidade do getContacts() com riqueza do getChatById()
 const getActiveGroupsMinimal = async (req, res) => {
   const startTime = Date.now();
   
@@ -1028,35 +1041,131 @@ const getActiveGroupsMinimal = async (req, res) => {
     }
     
     const userPhoneNumber = myJid.replace('@c.us', '');
+    
+    // Parâmetros opcionais para detalhes
+    const withDetails = req.query.withDetails === 'true';
+    const groupIdsToDetail = req.query.groupIds ? req.query.groupIds.split(',') : [];
+    
+    console.log(`[HYBRID] Starting hybrid group fetch - withDetails: ${withDetails}, groupsToDetail: ${groupIdsToDetail.length}`);
 
-    // UMA ÚNICA CHAMADA - máxima performance
+    // PASSO 1: Lista rápida com getContacts()
+    console.log(`[HYBRID] Step 1: Getting contacts for fast list`);
     const contacts = await client.getContacts();
     
-    // Filtrar apenas grupos e processar com dados mínimos
-    const groups = contacts
-      .filter(contact => contact.id._serialized.endsWith('@g.us'))
-      .map(group => {
-        try {
-          return {
-            id: group.id._serialized,
-            name: group.name || group.pushname || 'Grupo sem nome',
-            participants: [] // Não disponível em contatos
-          };
-        } catch (error) {
-          console.error(`Error processing group ${group.id._serialized}:`, error.message);
-          return null;
+    // Filtrar apenas grupos
+    const allGroups = contacts.filter(contact => contact.id._serialized.endsWith('@g.us'));
+    console.log(`[HYBRID] Found ${allGroups.length} groups from contacts`);
+    
+    // PASSO 2: Processar grupos básicos
+    const basicGroups = allGroups.map(group => {
+      try {
+        return {
+          id: group.id._serialized,
+          name: group.name || group.pushname || 'Grupo sem nome',
+          participants: [], // Placeholder - será preenchido se withDetails=true
+          hasDetails: false
+        };
+      } catch (error) {
+        console.error(`Error processing group ${group.id._serialized}:`, error.message);
+        return null;
+      }
+    }).filter(group => group !== null);
+
+    // PASSO 3: Adicionar detalhes se solicitado
+    let detailedGroups = basicGroups;
+    
+    if (withDetails && groupIdsToDetail.length > 0) {
+      console.log(`[HYBRID] Step 2: Getting details for ${groupIdsToDetail.length} specific groups`);
+      
+      const detailedGroupsMap = new Map();
+      
+      // Processar grupos específicos em paralelo (máximo 5 por vez para evitar sobrecarga)
+      const BATCH_SIZE = 5;
+      for (let i = 0; i < groupIdsToDetail.length; i += BATCH_SIZE) {
+        const batch = groupIdsToDetail.slice(i, i + BATCH_SIZE);
+        
+        console.log(`[HYBRID] Processing batch ${Math.floor(i/BATCH_SIZE) + 1}/${Math.ceil(groupIdsToDetail.length/BATCH_SIZE)}`);
+        
+        const batchPromises = batch.map(async (groupId) => {
+          try {
+            console.log(`[HYBRID] Getting details for group: ${groupId}`);
+            const groupChat = await client.getChatById(groupId);
+            
+            if (groupChat && groupChat.groupMetadata) {
+              const metadata = groupChat.groupMetadata;
+              const participants = metadata.participants || [];
+              const me = participants.find(p => p.id._serialized === myJid);
+              
+              return {
+                id: groupId,
+                name: groupChat.name || metadata.subject || 'Grupo sem nome',
+                participants: participants.map(p => ({
+                  id: p.id._serialized,
+                  isAdmin: Boolean(p.isAdmin),
+                  isSuperAdmin: Boolean(p.isSuperAdmin)
+                })),
+                participantCount: participants.length,
+                owner: metadata.owner?._serialized || 'unknown',
+                description: metadata.description || null,
+                createdAt: metadata.createdAt || null,
+                myRole: {
+                  isAdmin: Boolean(me?.isAdmin),
+                  isSuperAdmin: Boolean(me?.isSuperAdmin)
+                },
+                hasDetails: true
+              };
+            } else {
+              console.log(`[HYBRID] No metadata found for group: ${groupId}`);
+              return null;
+            }
+          } catch (error) {
+            console.error(`[HYBRID] Error getting details for group ${groupId}:`, error.message);
+            return null;
+          }
+        });
+        
+        const batchResults = await Promise.allSettled(batchPromises);
+        
+        // Adicionar resultados válidos ao mapa
+        batchResults.forEach(result => {
+          if (result.status === 'fulfilled' && result.value) {
+            detailedGroupsMap.set(result.value.id, result.value);
+          }
+        });
+        
+        // Pequena pausa entre lotes para não sobrecarregar
+        if (i + BATCH_SIZE < groupIdsToDetail.length) {
+          await new Promise(resolve => setTimeout(resolve, 200));
         }
-      })
-      .filter(group => group !== null);
+      }
+      
+      // Combinar grupos básicos com detalhes
+      detailedGroups = basicGroups.map(group => {
+        const detailed = detailedGroupsMap.get(group.id);
+        if (detailed) {
+          return detailed;
+        }
+        return group;
+      });
+      
+      console.log(`[HYBRID] Successfully added details for ${detailedGroupsMap.size} groups`);
+    }
 
     const processingTime = Date.now() - startTime;
     
-    console.log(`[PERF] getActiveGroupsMinimal (optimized) completed in ${processingTime}ms - Found ${groups.length} groups`);
+    console.log(`[HYBRID] getActiveGroupsMinimal completed in ${processingTime}ms - Found ${detailedGroups.length} groups (${detailedGroups.filter(g => g.hasDetails).length} with details)`);
     
     res.json({ 
       success: true, 
       userPhoneNumber: userPhoneNumber,
-      result: groups
+      result: detailedGroups,
+      metadata: {
+        totalGroups: detailedGroups.length,
+        groupsWithDetails: detailedGroups.filter(g => g.hasDetails).length,
+        processingTimeMs: processingTime,
+        method: withDetails ? 'hybrid-with-details' : 'contacts-only',
+        performance: processingTime < 100 ? 'excellent' : processingTime < 500 ? 'good' : 'slow'
+      }
     });
     
   } catch (error) {
