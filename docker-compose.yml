@@ -8,6 +8,15 @@ services:
     restart: always
     ports:
       - "3000:3000"
+    # LIMITES DE RECURSOS (ajustados para estabilidade)
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1.0'
+        reservations:
+          memory: 1G
+          cpus: '0.5'
     environment:
       # - API_KEY=your_global_api_key_here  # OPTIONAL
       - BASE_WEBHOOK_URL=http://localhost:3000/localCallbackExample
@@ -15,7 +24,7 @@ services:
       - MAX_ATTACHMENT_SIZE=5000000 # IN BYTES
       - SET_MESSAGES_AS_SEEN=TRUE # WILL MARK THE MESSAGES AS READ AUTOMATICALLY
       # ALL CALLBACKS: auth_failure|authenticated|call|change_state|disconnected|group_join|group_leave|group_update|loading_screen|media_uploaded|message|message_ack|message_create|message_reaction|message_revoke_everyone|qr|ready|contact_changed
-      - DISABLED_CALLBACKS=message_ack|message_reaction  # PREVENT SENDING CERTAIN TYPES OF CALLBACKS BACK TO THE WEBHOOK
+      - DISABLED_CALLBACKS=message_ack|message_reaction|media_uploaded|loading_screen  # PREVENT SENDING CERTAIN TYPES OF CALLBACKS BACK TO THE WEBHOOK
       - ENABLE_SWAGGER_ENDPOINT=TRUE # OPTIONAL, ENABLES THE /api-docs ENDPOINT
       # - RATE_LIMIT_MAX=1000 # OPTIONAL, THE MAXIUM NUMBER OF CONNECTIONS TO ALLOW PER TIME FRAME
       # - RATE_LIMIT_WINDOW_MS=1000 # OPTIONAL, TIME FRAME FOR WHICH REQUESTS ARE CHECKED IN MS
@@ -23,5 +32,9 @@ services:
       # - WEB_VERSION_CACHE_TYPE=none # OPTIONAL, DETERMINES WHERE TO GET THE WHATSAPP WEB VERSION(local, remote or none), DEFAULT 'none'
       - RECOVER_SESSIONS=FALSE # OPTIONAL, SHOULD WE RECOVER THE SESSION IN CASE OF PAGE FAILURES
       # - SERVER_TIMEOUT=180000 # OPTIONAL, SERVER TIMEOUT IN MILLISECONDS (DEFAULT: 180000 = 3 MINUTES)
+      # OTIMIZAÇÕES DE PERFORMANCE (ajustadas para estabilidade)
+      - NODE_OPTIONS=--max-old-space-size=1024
+      - PUPPETEER_DISABLE_HEADLESS_WARNING=true
+      - PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
     volumes:
       - ./sessions:/usr/src/app/sessions # Mount the local ./sessions/ folder to the container's /usr/src/app/sessions folder

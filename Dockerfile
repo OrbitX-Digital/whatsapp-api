@@ -4,17 +4,22 @@ FROM node:20-alpine
 # Set the working directory
 WORKDIR /usr/src/app
 
-# Install Chromium
+# Install Chromium with optimizations
 ENV CHROME_BIN="/usr/bin/chromium-browser" \
     PUPPETEER_SKIP_CHROMIUM_DOWNLOAD="true" \
-    NODE_ENV="production"
+    NODE_ENV="production" \
+    NODE_OPTIONS="--max-old-space-size=1024"
+
 RUN set -x \
     && apk update \
     && apk upgrade \
     && apk add --no-cache \
     udev \
     ttf-freefont \
-    chromium
+    chromium \
+    # Otimizações de memória
+    && rm -rf /var/cache/apk/* \
+    && rm -rf /tmp/*
 
 # Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
