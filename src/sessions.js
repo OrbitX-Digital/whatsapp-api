@@ -467,11 +467,26 @@ const deleteSession = async (sessionId, validation) => {
   }
 }
 
+// Function to clean WhatsApp Web cache
+const cleanWhatsAppWebCache = async () => {
+  try {
+    const cachePath = path.join(process.cwd(), '.wwebjs_cache')
+    if (fs.existsSync(cachePath)) {
+      console.log('Cleaning WhatsApp Web cache...')
+      await fs.promises.rm(cachePath, { recursive: true, force: true })
+      console.log('WhatsApp Web cache cleaned successfully')
+    }
+  } catch (error) {
+    console.log('Error cleaning WhatsApp Web cache:', error)
+  }
+}
+
 // Function to handle session flush
 const flushSessions = async (deleteOnlyInactive) => {
   try {
     // Read the contents of the sessions folder
     const files = await fs.promises.readdir(sessionFolderPath)
+    console.log(`Found ${files.length} files/folders in sessions directory`)
     
     if (!deleteOnlyInactive) {
       // If terminating all sessions, delete ALL session folders regardless of status
@@ -511,6 +526,9 @@ const flushSessions = async (deleteOnlyInactive) => {
           }
         }
       }
+      
+      // Clean WhatsApp Web cache when terminating all sessions
+      await cleanWhatsAppWebCache()
     } else {
       // Original logic for deleting only inactive sessions
       for (const file of files) {
@@ -524,8 +542,10 @@ const flushSessions = async (deleteOnlyInactive) => {
         }
       }
     }
+    
+    console.log('Session flush completed successfully')
   } catch (error) {
-    console.log(error)
+    console.log('Session flush error:', error)
     throw error
   }
 }

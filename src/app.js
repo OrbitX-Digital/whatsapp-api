@@ -20,6 +20,12 @@ app.use(bodyParser.json({ limit: maxAttachmentSize + 1000000 }))
 app.use(bodyParser.urlencoded({ limit: maxAttachmentSize + 1000000, extended: true }))
 app.use('/', routes)
 
-restoreSessions()
+// Only restore sessions if RECOVER_SESSIONS is enabled
+const { recoverSessions } = require('./config')
+if (recoverSessions) {
+  restoreSessions()
+} else {
+  console.log('Session recovery disabled. Existing sessions will not be restored automatically.')
+}
 
 module.exports = app
