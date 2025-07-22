@@ -45,6 +45,10 @@ sessionRouter.get('/terminate/:sessionId', middleware.sessionNameValidation, ses
 sessionRouter.get('/terminateInactive', sessionController.terminateInactiveSessions)
 sessionRouter.get('/terminateAll', sessionController.terminateAllSessions)
 
+// ✅ NOVOS ENDPOINTS DE MONITORAMENTO
+sessionRouter.get('/health', sessionController.getSessionsHealth)
+sessionRouter.get('/pool/stats', sessionController.getBrowserPoolStats)
+
 /**
  * ================
  * CLIENT ENDPOINTS
@@ -184,6 +188,21 @@ contactRouter.get('/activeGroupsBasic/:sessionId', [middleware.sessionNameValida
 contactRouter.get('/activeGroupsBasic/:channelToken', [middleware.sessionNameValidation, middleware.sessionValidation], contactController.getActiveGroupsBasic)
 contactRouter.get('/activeGroupsMinimal/:sessionId', [middleware.sessionNameValidation, middleware.sessionValidation], contactController.getActiveGroupsMinimal)
 contactRouter.get('/activeGroupsMinimal/:channelToken', [middleware.sessionNameValidation, middleware.sessionValidation], contactController.getActiveGroupsMinimal)
+
+/**
+ * ====================
+ * MONITORING ENDPOINTS
+ * ====================
+ */
+// Temporariamente comentadas para debugging
+// routes.get('/monitoring/health', middleware.keyValidation, monitoringController.getSystemHealth)
+// routes.get('/monitoring/sessions', middleware.keyValidation, monitoringController.getAllSessions)
+// routes.get('/monitoring/sessions/:sessionId', middleware.keyValidation, monitoringController.getSessionDetails)
+// routes.post('/monitoring/sessions/:sessionId/reconnect', middleware.keyValidation, monitoringController.forceReconnectSession)
+// routes.post('/monitoring/cleanup', middleware.keyValidation, monitoringController.triggerCleanup)
+// routes.get('/monitoring/report', middleware.keyValidation, monitoringController.getDetailedReport)
+// routes.get('/monitoring/metrics', middleware.keyValidation, monitoringController.getConnectionMetrics)
+// routes.get('/monitoring/alerts', middleware.keyValidation, monitoringController.getSystemAlerts)
 
 /**
  * ================

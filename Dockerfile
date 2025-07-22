@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 ENV CHROME_BIN="/usr/bin/chromium-browser" \
     PUPPETEER_SKIP_CHROMIUM_DOWNLOAD="true" \
     NODE_ENV="production" \
-    NODE_OPTIONS="--max-old-space-size=1024"
+    NODE_OPTIONS="--max-old-space-size=4096"
 
 RUN set -x \
     && apk update \

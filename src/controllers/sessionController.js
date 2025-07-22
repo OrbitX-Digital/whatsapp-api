@@ -1,6 +1,7 @@
 const qr = require('qr-image')
 const { setupSession, deleteSession, reloadSession, validateSession, flushSessions, sessions } = require('../sessions')
 const { sendErrorResponse, waitForNestedObject } = require('../utils')
+const { getBrowserPool } = require('../utils/browserPool')
 
 /**
  * Starts a session for the given session ID.
@@ -363,6 +364,72 @@ const terminateAllSessions = async (req, res) => {
   }
 }
 
+/**
+ * Get health status of all sessions
+ */
+const getSessionsHealth = async (req, res) => {
+  try {
+    const activeSessions = Array.from(sessions.entries()).map(([id, client]) => {
+      return {
+        sessionId: id,
+        isActive: client && !client.pupPage?.isClosed(),
+        phoneNumber: client?.info?.wid?._serialized || 'unknown',
+        state: client?.info?.platform || 'unknown',
+        lastSeen: new Date().toISOString()
+      }
+    })
+    
+    const browserPool = getBrowserPool()
+    const poolStats = browserPool.getStats()
+    
+    const maxSessions = process.env.MAX_CONCURRENT_SESSIONS || 25
+    
+    res.json({
+      success: true,
+      data: {
+        maxSessions: parseInt(maxSessions),
+        activeSessions: activeSessions.filter(s => s.isActive).length,
+        totalSessions: sessions.size,
+        availableSlots: parseInt(maxSessions) - activeSessions.filter(s => s.isActive).length,
+        sessions: activeSessions,
+        browserPool: {
+          activeBrowsers: poolStats.active,
+          inUseBrowsers: poolStats.inUse,
+          created: poolStats.created,
+          destroyed: poolStats.destroyed,
+          reused: poolStats.reused,
+          errors: poolStats.errors
+        },
+        timestamp: new Date().toISOString()
+      }
+    })
+  } catch (error) {
+    sendErrorResponse(res, 500, 'Error getting sessions health', error.message)
+  }
+}
+
+/**
+ * Get detailed browser pool statistics
+ */
+const getBrowserPoolStats = async (req, res) => {
+  try {
+    const browserPool = getBrowserPool()
+    const detailedInfo = browserPool.getDetailedInfo()
+    
+    res.json({
+      success: true,
+      data: {
+        poolStatistics: detailedInfo.stats,
+        sessionDetails: detailedInfo.sessions,
+        memoryUsage: detailedInfo.memoryUsage,
+        timestamp: new Date().toISOString()
+      }
+    })
+  } catch (error) {
+    sendErrorResponse(res, 500, 'Error getting browser pool stats', error.message)
+  }
+}
+
 module.exports = {
   startSession,
   statusSession,
@@ -371,5 +438,7 @@ module.exports = {
   restartSession,
   terminateSession,
   terminateInactiveSessions,
-  terminateAllSessions
+  terminateAllSessions,
+  getSessionsHealth,
+  getBrowserPoolStats
 }

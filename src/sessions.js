@@ -5,6 +5,64 @@ const sessions = new Map()
 const { baseWebhookURL, sessionFolderPath, maxAttachmentSize, setMessagesAsSeen, webVersion, webVersionCacheType, recoverSessions } = require('./config')
 const { triggerWebhook, waitForNestedObject, checkIfEventisEnabled } = require('./utils')
 const { exec } = require('child_process')
+const ConnectionManager = require('./utils/connectionManager')
+const { getEnvironmentConfig, getUserAgent } = require('./config/puppeteerConfig')
+const sessionMonitor = require('./utils/sessionMonitor')
+const SessionCleaner = require('./utils/sessionCleaner')
+
+// === NOVO: IMPORTAR SISTEMA DE POOL DE BROWSERS ===
+const { getBrowserPool } = require('./utils/browserPool')
+
+// Inicializar o pool de browsers (otimizado para múltiplas sessões)
+const browserPool = getBrowserPool({
+  maxBrowsers: 25, // ✅ Aumentado para 25 sessões (compatível com WhatsApp Business API)
+  cleanupInterval: 300000 // Limpeza a cada 5 minutos
+})
+
+// === SISTEMAS DE MONITORAMENTO (TEMPORARIAMENTE DESABILITADOS) ===
+// const { ConnectionManager } = require('./utils/connectionManager')
+// const { getEnvironmentConfig, getUserAgent } = require('./config/puppeteerConfig')
+// const sessionMonitor = require('./utils/sessionMonitor')
+// const SessionCleaner = require('./utils/sessionCleaner')
+
+// Armazenamento das sessões
+const connectionManagers = new Map()
+
+// const sessionCleaner = new SessionCleaner({
+//   checkInterval: 300000, // 5 minutos
+//   maxIdleTime: 1800000, // 30 minutos
+//   enableLogRotation: true,
+//   maxLogSize: 50 * 1024 * 1024 // 50MB
+// })
+
+// // Inicializar sistemas
+// sessionMonitor.start()
+// sessionCleaner.start()
+
+// // Listener para limpeza de sessões falhas
+// sessionCleaner.on('session:cleanup', async (sessionId) => {
+//   console.log(`[SessionCleaner] Limpando sessão falha: ${sessionId}`)
+//   await deleteSession(sessionId)
+// })
+
+// Função auxiliar para configurar WebVersion cache
+const getWebVersionCacheConfig = () => {
+  if (!webVersion) {
+    return { type: 'none' }
+  }
+  
+  switch (webVersionCacheType.toLowerCase()) {
+    case 'local':
+      return { type: 'local' }
+    case 'remote':
+      return {
+        type: 'remote',
+        remotePath: `https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/${webVersion}.html`
+      }
+    default:
+      return { type: 'none' }
+  }
+}
 
 // Function to validate if the session is ready
 const validateSession = async (sessionId) => {
@@ -87,135 +145,209 @@ const restoreSessions = () => {
 // Setup Session
 const setupSession = (sessionId) => {
   try {
+    console.log(`[${sessionId}] ===== INICIANDO CONFIGURAÇÃO DA SESSÃO =====`)
+    
+    // === VERIFICAÇÃO DE LIMITE DE SESSÕES SIMULTÂNEAS ===
+    const MAX_CONCURRENT_SESSIONS = process.env.MAX_CONCURRENT_SESSIONS || 25
+    const currentActiveSessions = Array.from(sessions.entries()).filter(([id, client]) => {
+      return client && !client.pupPage?.isClosed()
+    })
+    
+    if (currentActiveSessions.length >= MAX_CONCURRENT_SESSIONS && !sessions.has(sessionId)) {
+      const message = `Limite máximo de sessões simultâneas atingido (${MAX_CONCURRENT_SESSIONS}). ` +
+                     `Atualmente ativas: ${currentActiveSessions.length}. ` +
+                     `Termine algumas sessões antes de criar uma nova.`
+      console.log(`[${sessionId}] ❌ ${message}`)
+      return { success: false, message: message }
+    }
+    
+    // === VERIFICAÇÃO DE SESSÃO EXISTENTE ===
     if (sessions.has(sessionId)) {
-      return { success: false, message: `Session already exists for: ${sessionId}`, client: sessions.get(sessionId) }
-    }
+      const existingClient = sessions.get(sessionId)
+      console.log(`[${sessionId}] Sessão já existe, verificando status...`)
 
-    // Disable the delete folder from the logout function (will be handled separately)
-    const localAuth = new LocalAuth({ clientId: sessionId, dataPath: sessionFolderPath })
-    delete localAuth.logout
-    localAuth.logout = () => { }
-
-    const clientOptions = {
-      puppeteer: {
-        executablePath: process.env.CHROME_BIN || null,
-        // headless: false,
-        args: [
-          '--no-sandbox',
-          '--disable-setuid-sandbox',
-          '--disable-gpu',
-          '--disable-dev-shm-usage',
-          // OTIMIZAÇÕES SEGURAS (mantidas)
-          '--disable-background-timer-throttling',
-          '--disable-backgrounding-occluded-windows',
-          '--disable-renderer-backgrounding',
-          '--disable-features=TranslateUI',
-          '--disable-default-apps',
-          '--disable-extensions',
-          '--disable-plugins',
-          '--disable-sync',
-          // OTIMIZAÇÕES MODERADAS (ajustadas para estabilidade)
-          '--memory-pressure-off',
-          '--max_old_space_size=512',
-          '--disable-background-networking',
-          '--disable-translate',
-          '--hide-scrollbars',
-          '--mute-audio',
-          '--no-first-run',
-          '--safebrowsing-disable-auto-update',
-          '--ignore-certificate-errors',
-          '--ignore-ssl-errors',
-          '--ignore-certificate-errors-spki-list',
-          '--disable-web-security',
-          '--disable-features=VizDisplayCompositor',
-          '--disable-ipc-flooding-protection',
-          '--disable-software-rasterizer',
-          '--disable-threaded-animation',
-          '--disable-threaded-scrolling',
-          '--disable-in-process-stack-traces',
-          '--disable-histogram-customizer',
-          '--disable-gl-extensions',
-          '--disable-composited-antialiasing',
-          '--disable-canvas-aa',
-          '--disable-3d-apis',
-          '--disable-accelerated-2d-canvas',
-          '--disable-accelerated-jpeg-decoding',
-          '--disable-accelerated-mjpeg-decode',
-          '--disable-accelerated-video-decode',
-          '--disable-gpu-sandbox',
-          // CONFIGURAÇÕES DE ESTABILIDADE (adicionadas)
-          '--disable-background-timer-throttling',
-          '--disable-backgrounding-occluded-windows',
-          '--disable-renderer-backgrounding',
-          '--disable-features=TranslateUI,BlinkGenPropertyTrees',
-          '--disable-software-rasterizer',
-          '--disable-threaded-animation',
-          '--disable-threaded-scrolling',
-          '--disable-in-process-stack-traces',
-          '--disable-histogram-customizer',
-          '--disable-gl-extensions',
-          '--disable-composited-antialiasing',
-          '--disable-canvas-aa',
-          '--disable-3d-apis',
-          '--disable-accelerated-2d-canvas',
-          '--disable-accelerated-jpeg-decoding',
-          '--disable-accelerated-mjpeg-decode',
-          '--disable-accelerated-video-decode',
-          '--disable-gpu-sandbox',
-          '--disable-software-rasterizer',
-          '--disable-dev-shm-usage',
-          '--disable-setuid-sandbox',
-          '--no-sandbox',
-          '--disable-gpu',
-          '--disable-background-networking',
-          '--disable-default-apps',
-          '--disable-sync',
-          '--disable-translate',
-          '--hide-scrollbars',
-          '--mute-audio',
-          '--no-first-run',
-          '--safebrowsing-disable-auto-update',
-          '--ignore-certificate-errors',
-          '--ignore-ssl-errors',
-          '--ignore-certificate-errors-spki-list'
-        ]
-      },
-      userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36',
-      authStrategy: localAuth
-    }
-
-    if (webVersion) {
-      clientOptions.webVersion = webVersion
-      switch (webVersionCacheType.toLowerCase()) {
-        case 'local':
-          clientOptions.webVersionCache = {
-            type: 'local'
-          }
-          break
-        case 'remote':
-          clientOptions.webVersionCache = {
-            type: 'remote',
-            remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/' + webVersion + '.html'
-          }
-          break
-        default:
-          clientOptions.webVersionCache = {
-            type: 'none'
-          }
+      // Se sessão existente está ativa, retornar ela
+      if (existingClient && !existingClient.pupPage?.isClosed()) {
+        console.log(`[${sessionId}] Retornando sessão ativa existente`)
+        return { success: true, message: `Sessão já ativa para: ${sessionId}`, client: existingClient }
+      } else {
+        // Se sessão existe mas está morta, limpar e criar nova
+        console.log(`[${sessionId}] Sessão existente está inativa, limpando...`)
+        sessions.delete(sessionId)
+        connectionManagers.delete(sessionId)
       }
     }
 
+    // === NOVA VERIFICAÇÃO: SESSÕES POR NÚMERO VS SESSÕES TOTAIS ===
+    const activeSessions = Array.from(sessions.entries()).filter(([id, client]) => {
+      return client && !client.pupPage?.isClosed()
+    })
+
+    console.log(`[${sessionId}] Status atual do sistema:`)
+    console.log(`  - Total de sessões ativas: ${activeSessions.length}`)
+    console.log(`  - Sessões no pool de browsers: ${browserPool.getStats().active}`)
+
+    if (activeSessions.length > 0) {
+      console.log(`[${sessionId}] Sessões ativas detectadas:`)
+      activeSessions.forEach(([id, client]) => {
+        const phoneNumber = client.info?.wid?._serialized || 'número desconhecido'
+        console.log(`  - Sessão ${id}: ${phoneNumber}`)
+      })
+      
+      // Para múltiplos números diferentes, isso é NORMAL e ESPERADO
+      console.log(`[${sessionId}] ✅ Sistema preparado para múltiplos números WhatsApp`)
+    }
+
+    // === CONFIGURAÇÃO ISOLADA DO CLIENTE ===
+    console.log(`[${sessionId}] Configurando cliente isolado...`)
+    
+    // Configurações otimizadas para múltiplas instâncias
+    const clientOptions = {
+      authStrategy: new LocalAuth({
+        clientId: sessionId,
+        dataPath: sessionFolderPath
+      }),
+      
+      // === CONFIGURAÇÃO ESPECÍFICA DO PUPPETEER ISOLADO ===
+      puppeteer: {
+        // A configuração será obtida dinamicamente pelo browserPool
+        // que usa getIsolatedSessionConfig(sessionId)
+        handleSIGINT: false,
+        handleSIGTERM: false,
+        handleSIGHUP: false
+      },
+      
+      // === CONFIGURAÇÕES ESPECÍFICAS PARA MÚLTIPLAS SESSÕES ===
+      restartOnAuthFail: true,
+      takeoverOnConflict: false, // CRÍTICO: Não forçar takeover para múltiplos números
+      takeoverTimeoutMs: 0,
+      qrMaxRetries: 5,
+      
+      // === CONFIGURAÇÕES DE ESTABILIDADE ===
+      webVersionCache: {
+        type: 'remote',
+        remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2412.54.html'
+      },
+      
+      // === USER AGENT DINÂMICO ===
+      userAgent: getUserAgent()
+    }
+
+    console.log(`[${sessionId}] Criando cliente WhatsApp com isolamento completo...`)
     const client = new Client(clientOptions)
 
-    client.initialize().catch(err => console.log('Initialize error:', err.message))
+    // === EVENTOS ESPECÍFICOS PARA MÚLTIPLAS SESSÕES ===
+    
+    // QR Code
+    client.on('qr', (qr) => {
+      console.log(`[${sessionId}] 📱 QR Code gerado para sessão isolada`)
+      // sessionMonitor.registerSession(sessionId, client, { qrGenerated: true })
+    })
 
-    initializeEvents(client, sessionId)
+    // Ready
+    client.on('ready', () => {
+      const phoneNumber = client.info?.wid?._serialized || sessionId
+      console.log(`[${sessionId}] ✅ Cliente conectado: ${phoneNumber}`)
+      console.log(`[${sessionId}] 🔗 Sessão isolada ativa e funcional`)
+      
+      // Registrar no monitoramento
+      // sessionMonitor.registerSession(sessionId, client, { 
+      //   connected: true, 
+      //   phoneNumber: phoneNumber,
+      //   isolated: true 
+      // })
+    })
 
-    // Save the session to the Map
+    // Authenticated
+    client.on('authenticated', () => {
+      console.log(`[${sessionId}] 🔐 Sessão autenticada com sucesso`)
+    })
+
+    // Auth failure
+    client.on('auth_failure', (msg) => {
+      console.error(`[${sessionId}] ❌ Falha na autenticação:`, msg)
+    })
+
+    // Disconnected
+    client.on('disconnected', (reason) => {
+      console.log(`[${sessionId}] 🔌 Cliente desconectado:`, reason)
+      
+      // Liberar browser do pool
+      browserPool.releaseBrowserForSession(sessionId)
+      
+      // Remover da lista de sessões
+      sessions.delete(sessionId)
+      connectionManagers.delete(sessionId)
+      
+      // sessionMonitor.unregisterSession(sessionId)
+    })
+
+    // Message
+    client.on('message', (message) => {
+      console.log(`[${sessionId}] 📨 Nova mensagem recebida`)
+    })
+
+    // Error
+    client.on('error', (error) => {
+      console.error(`[${sessionId}] ❌ Erro no cliente:`, error.message)
+    })
+
+    // === INTEGRAÇÃO COM BROWSER POOL ===
+    console.log(`[${sessionId}] Integrando com sistema de browser isolado...`)
+    
+    // Sobrescrever a inicialização do Puppeteer para usar nosso pool
+    const originalInitialize = client.initialize.bind(client)
+    client.initialize = async function() {
+      try {
+        console.log(`[${sessionId}] Obtendo browser isolado do pool...`)
+        
+        // Obter browser isolado do pool
+        const browser = await browserPool.getBrowserForSession(sessionId)
+        
+        // Configurar o cliente para usar este browser específico
+        client.pupBrowser = browser
+        
+        console.log(`[${sessionId}] Browser isolado configurado (PID: ${browser.process()?.pid})`)
+        
+        // Chamar inicialização original
+        return await originalInitialize()
+        
+      } catch (error) {
+        console.error(`[${sessionId}] Erro ao obter browser isolado:`, error.message)
+        throw error
+      }
+    }
+
+    // === CONFIGURAÇÃO DO CONNECTION MANAGER (DESABILITADO TEMPORARIAMENTE) ===
+    // console.log(`[${sessionId}] Configurando gerenciador de conexão...`)
+    // const connectionManager = new ConnectionManager(client, sessionId, {
+    //   maxRetries: 5,
+    //   initialDelay: 2000,
+    //   maxDelay: 30000,
+    //   backoffFactor: 2,
+    //   jitter: true,
+    //   healthCheckInterval: 60000
+    // })
+
+    // Armazenar referências
     sessions.set(sessionId, client)
-    return { success: true, message: 'Session initiated successfully', client }
+    // connectionManagers.set(sessionId, connectionManager)
+
+    console.log(`[${sessionId}] ✅ Configuração da sessão isolada concluída`)
+    console.log(`[${sessionId}] 🎯 Pronto para conectar número WhatsApp independente`)
+
+    return { success: true, message: `Sessão isolada configurada: ${sessionId}`, client }
+
   } catch (error) {
-    return { success: false, message: error.message, client: null }
+    console.error(`[${sessionId}] ❌ Erro ao configurar sessão:`, error.message)
+    console.error(`[${sessionId}] Stack trace:`, error.stack)
+    
+    // Limpeza em caso de erro
+    sessions.delete(sessionId)
+    connectionManagers.delete(sessionId)
+    browserPool.releaseBrowserForSession(sessionId)
+    
+    return { success: false, message: error.message }
   }
 }
 
@@ -496,39 +628,141 @@ const reloadSession = async (sessionId) => {
   }
 }
 
-const deleteSession = async (sessionId, validation) => {
+const deleteSession = async (sessionId) => {
   try {
-    const client = sessions.get(sessionId)
-    if (!client) {
-      return
+    console.log(`[${sessionId}] ===== INICIANDO DELEÇÃO DA SESSÃO =====`)
+    
+    // === FASE 1: DESTRUIR CLIENTE E CONNECTION MANAGER ===
+    if (sessions.has(sessionId)) {
+      const client = sessions.get(sessionId)
+      console.log(`[${sessionId}] Destruindo cliente WhatsApp...`)
+      
+      try {
+        // Verificar se o cliente tem pupPage ativo
+        if (client.pupPage && !client.pupPage.isClosed()) {
+          console.log(`[${sessionId}] Fechando página do cliente...`)
+          await client.pupPage.close()
+        }
+        
+        // Verificar se o cliente tem pupBrowser ativo  
+        if (client.pupBrowser && client.pupBrowser.isConnected()) {
+          console.log(`[${sessionId}] Desconectando browser do cliente...`)
+          // Não fechar aqui - será feito pelo browserPool
+        }
+        
+        // Destruir o cliente
+        console.log(`[${sessionId}] Executando logout e destroy do cliente...`)
+        await client.logout()
+        await client.destroy()
+        
+      } catch (error) {
+        console.warn(`[${sessionId}] Erro ao destruir cliente (continuando):`, error.message)
+      }
+      
+      // Remover da lista de sessões
+      sessions.delete(sessionId)
+      console.log(`[${sessionId}] ✅ Cliente removido da lista de sessões`)
     }
-    // Check if pupPage exists before trying to remove listeners
-    if (client.pupPage) {
-      client.pupPage.removeAllListeners('close')
-      client.pupPage.removeAllListeners('error')
+
+    // === FASE 2: DESTRUIR CONNECTION MANAGER ===
+    if (connectionManagers.has(sessionId)) {
+      const connectionManager = connectionManagers.get(sessionId)
+      console.log(`[${sessionId}] Destruindo connection manager...`)
+      
+      try {
+        if (connectionManager && typeof connectionManager.destroy === 'function') {
+          await connectionManager.destroy()
+        }
+      } catch (error) {
+        console.warn(`[${sessionId}] Erro ao destruir connection manager (continuando):`, error.message)
+      }
+      
+      connectionManagers.delete(sessionId)
+      console.log(`[${sessionId}] ✅ Connection manager removido`)
     }
-    if (validation.success) {
-      // Client Connected, request logout
-      console.log(`Logging out session ${sessionId}`)
-      await client.logout()
-    } else if (validation.message === 'session_not_connected') {
-      // Client not Connected, request destroy
-      console.log(`Destroying session ${sessionId}`)
-      await client.destroy()
+
+    // === FASE 3: LIBERAR BROWSER DO POOL ===
+    console.log(`[${sessionId}] Liberando browser do pool...`)
+    try {
+      await browserPool.destroyBrowserForSession(sessionId)
+      console.log(`[${sessionId}] ✅ Browser liberado do pool`)
+    } catch (error) {
+      console.warn(`[${sessionId}] Erro ao liberar browser do pool (continuando):`, error.message)
     }
-    // Wait 10 secs for client.pupBrowser to be disconnected before deleting the folder
-    let maxDelay = 0
-    if (client.pupBrowser && client.pupBrowser.isConnected) {
-      while (client.pupBrowser.isConnected() && (maxDelay < 10)) {
+
+    // === FASE 4: REMOVER DO MONITORAMENTO ===
+    // try {
+    //   sessionMonitor.unregisterSession(sessionId)
+    //   console.log(`[${sessionId}] ✅ Removido do monitoramento`)
+    // } catch (error) {
+    //   console.warn(`[${sessionId}] Erro ao remover do monitoramento (continuando):`, error.message)
+    // }
+
+    // === FASE 5: DELETAR PASTA DA SESSÃO ===
+    const sessionPath = `${sessionFolderPath}/${sessionId}`
+    console.log(`[${sessionId}] Removendo pasta da sessão: ${sessionPath}`)
+    
+    if (fs.existsSync(sessionPath)) {
+      try {
+        // Aguardar um pouco para garantir que todos os processos finalizaram
+        await new Promise(resolve => setTimeout(resolve, 2000))
+        
+        // Remover recursivamente
+        await fs.promises.rm(sessionPath, { recursive: true, force: true })
+        console.log(`[${sessionId}] ✅ Pasta da sessão removida`)
+      } catch (error) {
+        console.error(`[${sessionId}] ❌ Erro ao remover pasta da sessão:`, error.message)
+        // Tentar forçar remoção
+        try {
+          const { exec } = require('child_process')
+          await new Promise((resolve, reject) => {
+            exec(`rm -rf "${sessionPath}"`, (error) => {
+              if (error) reject(error)
+              else resolve()
+            })
+          })
+          console.log(`[${sessionId}] ✅ Pasta da sessão removida (forçado)`)
+        } catch (forceError) {
+          console.error(`[${sessionId}] ❌ Falha ao forçar remoção:`, forceError.message)
+        }
+      }
+    } else {
+      console.log(`[${sessionId}] ℹ️ Pasta da sessão não existe`)
+    }
+
+    // === FASE 6: LIMPEZA ADICIONAL DO BROWSER ===
+    const browserSessionPath = `${process.cwd()}/browser-sessions/${sessionId}`
+    console.log(`[${sessionId}] Removendo dados do browser: ${browserSessionPath}`)
+    
+    if (fs.existsSync(browserSessionPath)) {
+      try {
         await new Promise(resolve => setTimeout(resolve, 1000))
-        maxDelay++
+        await fs.promises.rm(browserSessionPath, { recursive: true, force: true })
+        console.log(`[${sessionId}] ✅ Dados do browser removidos`)
+      } catch (error) {
+        console.warn(`[${sessionId}] Erro ao remover dados do browser (continuando):`, error.message)
       }
     }
-    await deleteSessionFolder(sessionId)
-    sessions.delete(sessionId)
+
+    console.log(`[${sessionId}] ===== DELEÇÃO DA SESSÃO CONCLUÍDA =====`)
+    console.log(`[${sessionId}] 🎯 Sessão completamente isolada e removida`)
+    
+    // Exibir estatísticas do pool após limpeza
+    const poolStats = browserPool.getStats()
+    console.log(`[SISTEMA] Browsers ativos após limpeza: ${poolStats.active}`)
+    
+    return { success: true, message: `Sessão ${sessionId} deletada com sucesso` }
+
   } catch (error) {
-    console.log(error)
-    throw error
+    console.error(`[${sessionId}] ❌ Erro durante deleção da sessão:`, error.message)
+    console.error(`[${sessionId}] Stack trace:`, error.stack)
+    
+    // Tentar limpeza de emergência
+    sessions.delete(sessionId)
+    connectionManagers.delete(sessionId)
+    browserPool.releaseBrowserForSession(sessionId)
+    
+    return { success: false, message: `Erro ao deletar sessão: ${error.message}` }
   }
 }
 
@@ -592,7 +826,7 @@ const flushSessions = async (deleteOnlyInactive) => {
           // Try to delete the session properly if it's active
           const validation = await validateSession(sessionId)
           if (validation.message !== 'session_not_found') {
-            await deleteSession(sessionId, validation)
+            await deleteSession(sessionId)
           } else {
             // If session is not active, just delete the folder directly
             try {
@@ -626,7 +860,7 @@ const flushSessions = async (deleteOnlyInactive) => {
           const sessionId = match[1]
           const validation = await validateSession(sessionId)
           if (!validation.success) {
-            await deleteSession(sessionId, validation)
+            await deleteSession(sessionId)
           }
         }
       }

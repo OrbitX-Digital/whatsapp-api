@@ -1,0 +1,42 @@
+[
+  {
+    "timestamp": "2025-07-22T20:08:31.294Z",
+    "sessions": [],
+    "summary": {
+      "total": 0,
+      "healthy": 0,
+      "unhealthy": 0,
+      "stale": 0
+    }
+  },
+  {
+    "timestamp": "2025-07-22T20:08:46.310Z",
+    "sessions": [],
+    "summary": {
+      "total": 0,
+      "healthy": 0,
+      "unhealthy": 0,
+      "stale": 0
+    }
+  },
+  {
+    "timestamp": "2025-07-22T20:09:01.327Z",
+    "sessions": [],
+    "summary": {
+      "total": 0,
+      "healthy": 0,
+      "unhealthy": 0,
+      "stale": 0
+    }
+  },
+  {
+    "timestamp": "2025-07-22T20:09:16.342Z",
+    "sessions": [],
+    "summary": {
+      "total": 0,
+      "healthy": 0,
+      "unhealthy": 0,
+      "stale": 0
+    }
+  }
+]
