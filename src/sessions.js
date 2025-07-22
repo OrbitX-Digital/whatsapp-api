@@ -472,15 +472,55 @@ const flushSessions = async (deleteOnlyInactive) => {
   try {
     // Read the contents of the sessions folder
     const files = await fs.promises.readdir(sessionFolderPath)
-    // Iterate through the files in the parent folder
-    for (const file of files) {
-      // Use regular expression to extract the string from the folder name
-      const match = file.match(/^session-(.+)$/)
-      if (match) {
-        const sessionId = match[1]
-        const validation = await validateSession(sessionId)
-        if (!deleteOnlyInactive || !validation.success) {
-          await deleteSession(sessionId, validation)
+    
+    if (!deleteOnlyInactive) {
+      // If terminating all sessions, delete ALL session folders regardless of status
+      console.log('Terminating ALL sessions - deleting all session folders')
+      for (const file of files) {
+        // Use regular expression to extract the string from the folder name
+        const match = file.match(/^session-(.+)$/)
+        if (match) {
+          const sessionId = match[1]
+          console.log(`Deleting session folder: ${sessionId}`)
+          
+          // Try to delete the session properly if it's active
+          const validation = await validateSession(sessionId)
+          if (validation.message !== 'session_not_found') {
+            await deleteSession(sessionId, validation)
+          } else {
+            // If session is not active, just delete the folder directly
+            try {
+              await deleteSessionFolder(sessionId)
+              console.log(`Deleted orphaned session folder: ${sessionId}`)
+            } catch (folderError) {
+              console.log(`Error deleting orphaned session folder ${sessionId}:`, folderError.message)
+            }
+          }
+        }
+      }
+      
+      // Also delete any other files in the sessions folder (like message_log.txt)
+      for (const file of files) {
+        if (!file.match(/^session-/)) {
+          try {
+            const filePath = path.join(sessionFolderPath, file)
+            await fs.promises.unlink(filePath)
+            console.log(`Deleted file: ${file}`)
+          } catch (fileError) {
+            console.log(`Error deleting file ${file}:`, fileError.message)
+          }
+        }
+      }
+    } else {
+      // Original logic for deleting only inactive sessions
+      for (const file of files) {
+        const match = file.match(/^session-(.+)$/)
+        if (match) {
+          const sessionId = match[1]
+          const validation = await validateSession(sessionId)
+          if (!validation.success) {
+            await deleteSession(sessionId, validation)
+          }
         }
       }
     }
