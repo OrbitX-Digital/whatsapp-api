@@ -241,6 +241,11 @@ const setupSession = (sessionId) => {
     // QR Code
     client.on('qr', (qr) => {
       console.log(`[${sessionId}] 📱 QR Code gerado para sessão isolada`)
+      
+      // === ARMAZENAR QR CODE NA SESSÃO PARA ENDPOINTS ===
+      client.qr = qr
+      console.log(`[${sessionId}] ✅ QR Code armazenado para acesso via API`)
+      
       // sessionMonitor.registerSession(sessionId, client, { qrGenerated: true })
     })
 
@@ -249,6 +254,10 @@ const setupSession = (sessionId) => {
       const phoneNumber = client.info?.wid?._serialized || sessionId
       console.log(`[${sessionId}] ✅ Cliente conectado: ${phoneNumber}`)
       console.log(`[${sessionId}] 🔗 Sessão isolada ativa e funcional`)
+      
+      // === LIMPAR QR CODE APÓS AUTENTICAÇÃO ===
+      client.qr = null
+      console.log(`[${sessionId}] 🗑️ QR Code removido (sessão autenticada)`)
       
       // Registrar no monitoramento
       // sessionMonitor.registerSession(sessionId, client, { 
@@ -261,6 +270,10 @@ const setupSession = (sessionId) => {
     // Authenticated
     client.on('authenticated', () => {
       console.log(`[${sessionId}] 🔐 Sessão autenticada com sucesso`)
+      
+      // === LIMPAR QR CODE APÓS AUTENTICAÇÃO ===
+      client.qr = null
+      console.log(`[${sessionId}] 🗑️ QR Code removido (autenticado)`)
     })
 
     // Auth failure
@@ -335,6 +348,20 @@ const setupSession = (sessionId) => {
 
     console.log(`[${sessionId}] ✅ Configuração da sessão isolada concluída`)
     console.log(`[${sessionId}] 🎯 Pronto para conectar número WhatsApp independente`)
+
+    // === INICIALIZAÇÃO AUTOMÁTICA DO CLIENTE ===
+    console.log(`[${sessionId}] 🚀 Iniciando cliente WhatsApp automaticamente...`)
+    
+    // Inicializar o cliente de forma assíncrona (não bloquear a resposta)
+    setImmediate(async () => {
+      try {
+        await client.initialize()
+        console.log(`[${sessionId}] ✅ Cliente WhatsApp inicializado com sucesso`)
+      } catch (initError) {
+        console.error(`[${sessionId}] ❌ Erro na inicialização automática:`, initError.message)
+        // Não remover a sessão, deixar para retry manual
+      }
+    })
 
     return { success: true, message: `Sessão isolada configurada: ${sessionId}`, client }
 

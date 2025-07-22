@@ -7,6 +7,7 @@
 const getOptimalPuppeteerConfig = () => {
   return {
     headless: true, // Usar headless true (mais estável que 'new')
+    executablePath: '/usr/bin/chromium-browser', // CRITICAL: Path para Chromium no Alpine Linux
     
     // === ARGUMENTOS OTIMIZADOS PARA ESTABILIDADE E PERFORMANCE ===
     args: [
