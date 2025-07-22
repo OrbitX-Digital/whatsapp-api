@@ -184,6 +184,7 @@ contactRouter.get('/activeGroupsBasic/:sessionId', [middleware.sessionNameValida
 contactRouter.get('/activeGroupsBasic/:channelToken', [middleware.sessionNameValidation, middleware.sessionValidation], contactController.getActiveGroupsBasic)
 contactRouter.get('/activeGroupsMinimal/:sessionId', [middleware.sessionNameValidation, middleware.sessionValidation], contactController.getActiveGroupsMinimal)
 contactRouter.get('/activeGroupsMinimal/:channelToken', [middleware.sessionNameValidation, middleware.sessionValidation], contactController.getActiveGroupsMinimal)
+
 /**
  * ================
  * SWAGGER ENDPOINTS

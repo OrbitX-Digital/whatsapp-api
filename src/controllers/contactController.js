@@ -218,6 +218,8 @@ const unblock = async (req, res) => {
  * @throws {Error} If there is an error retrieving the active groups.
  * @returns {Promise<void>} A promise that resolves with the list of active groups.
  */
+// COMENTADO - VERSÃO ANTIGA (LENTA - USA getChats())
+/*
 const getActiveGroups = async (req, res) => {
   const startTime = Date.now();
   
@@ -518,11 +520,103 @@ const getActiveGroups = async (req, res) => {
     sendErrorResponse(res, 500, error.message);
   }
 };
+*/
+
+// NOVA VERSÃO OTIMIZADA - USA getContacts() EM VEZ DE getChats()
+const getActiveGroups = async (req, res) => {
+  const startTime = Date.now();
+  
+  try {
+    const sessionId = req.params.sessionId || req.params.channelToken;
+    const client = sessions.get(sessionId);
+    
+    if (!client) {
+      return sendErrorResponse(res, 404, 'Session not Found');
+    }
+    
+    const state = await client.getState();
+    if (state !== 'CONNECTED') {
+      return sendErrorResponse(res, 404, 'session_not_connected');
+    }
+
+    const myJid = client.info?.wid?._serialized;
+    if (!myJid) {
+      return sendErrorResponse(res, 500, 'Unable to get user JID');
+    }
+    
+    const userPhoneNumber = myJid.replace('@c.us', '');
+
+    // UMA ÚNICA CHAMADA - máxima eficiência (sem carregar mensagens)
+    console.log(`[PERF] Starting getContacts() for ${sessionId}`);
+    const contacts = await client.getContacts();
+    console.log(`[PERF] getContacts() completed in ${Date.now() - startTime}ms - Found ${contacts.length} contacts`);
+    
+    // Filtrar apenas grupos e processar
+    const groups = contacts
+      .filter(contact => contact.id._serialized.endsWith('@g.us'))
+      .map(group => {
+        try {
+          return {
+            id: group.id._serialized,
+            name: group.name || group.pushname || 'Grupo sem nome',
+            subject: group.name || group.pushname || 'Grupo sem nome',
+            owner: 'unknown', // Não disponível em contatos
+            createdAt: null, // Não disponível em contatos
+            description: null, // Não disponível em contatos
+            picture: null,
+            announcementOnly: false, // Não disponível em contatos
+            restrictInfo: false, // Não disponível em contatos
+            participantCount: 0, // Não disponível em contatos
+            participants: [], // Não disponível em contatos
+            myRole: {
+              isAdmin: false, // Não disponível em contatos
+              isSuperAdmin: false // Não disponível em contatos
+            },
+            canIMessage: true,
+            hasMetadata: false,
+            loadedFromCache: true,
+            // Dados disponíveis em contatos
+            number: group.number,
+            shortName: group.shortName,
+            isWAContact: Boolean(group.isWAContact),
+            isMyContact: Boolean(group.isMyContact)
+          };
+        } catch (error) {
+          console.error(`Error processing group ${group.id._serialized}:`, error.message);
+          return null;
+        }
+      })
+      .filter(group => group !== null);
+
+    const processingTime = Date.now() - startTime;
+    
+    console.log(`[PERF] getActiveGroups (optimized) completed in ${processingTime}ms - Found ${groups.length} groups`);
+    
+    res.json({ 
+      success: true, 
+      userPhoneNumber: userPhoneNumber,
+      result: groups,
+      metadata: {
+        totalContacts: contacts.length,
+        totalGroups: groups.length,
+        processingTimeMs: processingTime,
+        method: 'contacts-optimized',
+        performance: processingTime < 100 ? 'excellent' : processingTime < 500 ? 'good' : 'slow'
+      }
+    });
+    
+  } catch (error) {
+    console.error(`[ERROR] getActiveGroups failed:`, error.message);
+    sendErrorResponse(res, 500, error.message);
+  }
+};
 
 /**
  * Retrieves active groups with basic info only (ULTRA FAST VERSION)
  * Use this endpoint when you only need group names and IDs
  */
+// COMENTADO - VERSÃO ANTIGA (USA getChats())
+/*
 const getActiveGroupsBasic = async (req, res) => {
   const startTime = Date.now();
   
@@ -584,12 +678,74 @@ const getActiveGroupsBasic = async (req, res) => {
     sendErrorResponse(res, 500, error.message);
   }
 };
+*/
+
+// NOVA VERSÃO OTIMIZADA - USA getContacts()
+const getActiveGroupsBasic = async (req, res) => {
+  const startTime = Date.now();
+  
+  try {
+    const sessionId = req.params.sessionId || req.params.channelToken;
+    const client = sessions.get(sessionId);
+    
+    if (!client) {
+      return sendErrorResponse(res, 404, 'Session not Found');
+    }
+    
+    const state = await client.getState();
+    if (state !== 'CONNECTED') {
+      return sendErrorResponse(res, 404, 'session_not_connected');
+    }
+
+    const myJid = client.info?.wid?._serialized;
+    if (!myJid) {
+      return sendErrorResponse(res, 500, 'Unable to get user JID');
+    }
+    
+    const userPhoneNumber = myJid.replace('@c.us', '');
+
+    // UMA ÚNICA CHAMADA - super rápida
+    const contacts = await client.getContacts();
+    
+    // Processamento básico - apenas dados essenciais
+    const groups = contacts
+      .filter(contact => contact.id._serialized.endsWith('@g.us'))
+      .map(group => ({
+        id: group.id._serialized,
+        name: group.name || group.pushname || 'Grupo sem nome',
+        participantCount: 0, // Não disponível em contatos
+        isAdmin: false, // Não disponível em contatos
+        isGroup: true
+      }));
+
+    const processingTime = Date.now() - startTime;
+    
+    console.log(`[PERF] getActiveGroupsBasic (optimized) completed in ${processingTime}ms - Found ${groups.length} groups`);
+    
+    res.json({ 
+      success: true, 
+      userPhoneNumber: userPhoneNumber,
+      result: groups,
+      metadata: {
+        processingTimeMs: processingTime,
+        totalGroups: groups.length,
+        method: 'contacts-basic-optimized'
+      }
+    });
+    
+  } catch (error) {
+    console.error(`[ERROR] getActiveGroupsBasic failed:`, error.message);
+    sendErrorResponse(res, 500, error.message);
+  }
+};
 
 /**
  * Retrieves active groups with minimal essential data only (ULTRA OPTIMIZED VERSION)
  * Returns only: userPhoneNumber, group id, name, and participants with basic info
  * Designed for maximum performance and minimal data transfer
  */
+// COMENTADO - VERSÃO ANTIGA (USA getChats())
+/*
 const getActiveGroupsMinimal = async (req, res) => {
   const startTime = Date.now();
   
@@ -657,6 +813,67 @@ const getActiveGroupsMinimal = async (req, res) => {
     const processingTime = endTime - startTime;
     
     console.log(`[PERF] getActiveGroupsMinimal completed in ${processingTime}ms - Found ${groups.length} groups`);
+    
+    res.json({ 
+      success: true, 
+      userPhoneNumber: userPhoneNumber,
+      result: groups
+    });
+    
+  } catch (error) {
+    console.error(`[ERROR] getActiveGroupsMinimal failed:`, error.message);
+    sendErrorResponse(res, 500, error.message);
+  }
+};
+*/
+
+// NOVA VERSÃO OTIMIZADA - USA getContacts()
+const getActiveGroupsMinimal = async (req, res) => {
+  const startTime = Date.now();
+  
+  try {
+    const sessionId = req.params.sessionId || req.params.channelToken;
+    const client = sessions.get(sessionId);
+    
+    if (!client) {
+      return sendErrorResponse(res, 404, 'Session not Found');
+    }
+    
+    const state = await client.getState();
+    if (state !== 'CONNECTED') {
+      return sendErrorResponse(res, 404, 'session_not_connected');
+    }
+
+    const myJid = client.info?.wid?._serialized;
+    if (!myJid) {
+      return sendErrorResponse(res, 500, 'Unable to get user JID');
+    }
+    
+    const userPhoneNumber = myJid.replace('@c.us', '');
+
+    // UMA ÚNICA CHAMADA - máxima performance
+    const contacts = await client.getContacts();
+    
+    // Filtrar apenas grupos e processar com dados mínimos
+    const groups = contacts
+      .filter(contact => contact.id._serialized.endsWith('@g.us'))
+      .map(group => {
+        try {
+          return {
+            id: group.id._serialized,
+            name: group.name || group.pushname || 'Grupo sem nome',
+            participants: [] // Não disponível em contatos
+          };
+        } catch (error) {
+          console.error(`Error processing group ${group.id._serialized}:`, error.message);
+          return null;
+        }
+      })
+      .filter(group => group !== null);
+
+    const processingTime = Date.now() - startTime;
+    
+    console.log(`[PERF] getActiveGroupsMinimal (optimized) completed in ${processingTime}ms - Found ${groups.length} groups`);
     
     res.json({ 
       success: true, 
