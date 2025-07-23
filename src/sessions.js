@@ -212,6 +212,8 @@ const setupSession = (sessionId) => {
       puppeteer: {
         executablePath: '/usr/bin/chromium-browser', // CRITICAL: Chromium path
         headless: true,
+        timeout: 400000, // 6.7 minutos para múltiplas sessões
+        protocolTimeout: 600000, // 10 minutos para múltiplas sessões
         args: [
           '--no-sandbox',
           '--disable-setuid-sandbox',
@@ -220,7 +222,10 @@ const setupSession = (sessionId) => {
           '--no-first-run',
           '--no-zygote',
           '--disable-gpu',
-          '--disable-software-rasterizer'
+          '--disable-software-rasterizer',
+          '--disable-background-timer-throttling',
+          '--disable-backgrounding-occluded-windows',
+          '--disable-renderer-backgrounding'
         ],
         handleSIGINT: false,
         handleSIGTERM: false,
