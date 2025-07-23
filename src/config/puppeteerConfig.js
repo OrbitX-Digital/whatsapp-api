@@ -100,10 +100,10 @@ const getOptimalPuppeteerConfig = () => {
     },
     
     // === TIMEOUTS OTIMIZADOS (AUMENTADOS PARA MÚLTIPLAS SESSÕES) ===
-    timeout: 180000, // 3 minutos para inicialização de browser
+    timeout: 300000, // 5 minutos para inicialização de browser (múltiplas sessões)
     
     // === CONFIGURAÇÕES DE PROTOCOLO ===
-    protocolTimeout: 300000, // 5 minutos para comandos complexos
+    protocolTimeout: 480000, // 8 minutos para comandos complexos (múltiplas sessões)
     
     // === CONFIGURAÇÕES EXPERIMENTAIS ===
     ignoreDefaultArgs: false,
@@ -135,9 +135,9 @@ const getEnvironmentConfig = () => {
       '--disable-gpu-memory-buffer-video-frames'
     );
     
-    // Configurações específicas para container
-    baseConfig.timeout = 240000; // 4 minutos em Docker (mais generoso)
-    baseConfig.protocolTimeout = 360000; // 6 minutos em Docker
+    // Configurações específicas para container (MÚLTIPLAS SESSÕES)
+    baseConfig.timeout = 400000; // 6.7 minutos em Docker (múltiplas sessões)
+    baseConfig.protocolTimeout = 600000; // 10 minutos em Docker (múltiplas sessões)
   }
   
   if (!isProduction) {
