@@ -233,14 +233,23 @@ const setupSession = (sessionId) => {
       takeoverTimeoutMs: 0,
       qrMaxRetries: 5,
       
-      // === CONFIGURAÇÕES DE ESTABILIDADE ===
+      // === CONFIGURAÇÕES DE ESTABILIDADE E ISOLAMENTO ===
       webVersionCache: {
-        type: 'remote',
-        remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2412.54.html'
+        type: 'local', // Local cache para evitar conflitos entre sessões
+        path: `./cache/${sessionId}/` // Diretório único por sessão
       },
       
-      // === USER AGENT DINÂMICO ===
-      userAgent: getUserAgent()
+      // === CONFIGURAÇÕES AVANÇADAS PARA MÚLTIPLAS INSTÂNCIAS ===
+      session: sessionId, // Identificador único
+      bypassCSP: true, // Contornar políticas de segurança que podem interferir
+      
+      // === TIMEOUTS ESPECÍFICOS PARA MÚLTIPLAS SESSÕES ===
+      authTimeoutMs: 60000, // 1 minuto para autenticação
+      qrTimeoutMs: 30000, // 30 segundos por QR
+      restartOnAuthFailTimeout: 5000, // 5 segundos antes de restart
+      
+      // === USER AGENT DINÂMICO POR SESSÃO ===
+      userAgent: getUserAgent() + ` Session-${sessionId.substring(0, 8)}`
     }
 
     console.log(`[${sessionId}] Criando cliente WhatsApp com isolamento completo...`)
