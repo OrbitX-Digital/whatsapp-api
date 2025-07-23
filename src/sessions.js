@@ -76,8 +76,8 @@ const validateSession = async (sessionId) => {
     }
 
     const client = sessions.get(sessionId)
-    // wait until the client is created
-    await waitForNestedObject(client, 'pupPage')
+    // wait until the client is created (com timeout para múltiplas sessões)
+    await waitForNestedObject(client, 'pupPage', 300000) // 5 minutos
       .catch((err) => { return { success: false, state: null, message: err.message } })
 
     // Wait for client.pupPage to be evaluable
@@ -244,9 +244,9 @@ const setupSession = (sessionId) => {
       bypassCSP: true, // Contornar políticas de segurança que podem interferir
       
       // === TIMEOUTS ESPECÍFICOS PARA MÚLTIPLAS SESSÕES ===
-      authTimeoutMs: 60000, // 1 minuto para autenticação
-      qrTimeoutMs: 30000, // 30 segundos por QR
-      restartOnAuthFailTimeout: 5000, // 5 segundos antes de restart
+      authTimeoutMs: 300000, // 5 minutos para autenticação (múltiplas sessões)
+      qrTimeoutMs: 120000, // 2 minutos por QR (múltiplas sessões)
+      restartOnAuthFailTimeout: 10000, // 10 segundos antes de restart
       
       // === USER AGENT DINÂMICO POR SESSÃO ===
       userAgent: getUserAgent() + ` Session-${sessionId.substring(0, 8)}`
@@ -423,7 +423,7 @@ const initializeEvents = (client, sessionId) => {
   const sessionWebhook = process.env[sessionId.toUpperCase() + '_WEBHOOK_URL'] || baseWebhookURL
 
   if (recoverSessions) {
-    waitForNestedObject(client, 'pupPage').then(() => {
+    waitForNestedObject(client, 'pupPage', 300000).then(() => { // 5 minutos para múltiplas sessões
       const restartSession = async (sessionId) => {
         sessions.delete(sessionId)
         await client.destroy().catch(e => { })
